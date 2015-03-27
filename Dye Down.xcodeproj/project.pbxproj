@@ -20,7 +20,6 @@
 		D032F0D31AC3DA730069D6CC /* rate64x64.png in Resources */ = {isa = PBXBuildFile; fileRef = D032F0BA1AC3DA730069D6CC /* rate64x64.png */; };
 		D032F0D41AC3DA730069D6CC /* rate72x72.png in Resources */ = {isa = PBXBuildFile; fileRef = D032F0BB1AC3DA730069D6CC /* rate72x72.png */; };
 		D032F0D51AC3DA730069D6CC /* rate96x96.png in Resources */ = {isa = PBXBuildFile; fileRef = D032F0BC1AC3DA730069D6CC /* rate96x96.png */; };
-		D032F0D61AC3DA730069D6CC /* runner_1.png in Resources */ = {isa = PBXBuildFile; fileRef = D032F0BE1AC3DA730069D6CC /* runner_1.png */; };
 		D032F0D71AC3DA730069D6CC /* runner_2.png in Resources */ = {isa = PBXBuildFile; fileRef = D032F0BF1AC3DA730069D6CC /* runner_2.png */; };
 		D032F0D81AC3DA730069D6CC /* runner_3.png in Resources */ = {isa = PBXBuildFile; fileRef = D032F0C01AC3DA730069D6CC /* runner_3.png */; };
 		D032F0D91AC3DA730069D6CC /* runner_4.png in Resources */ = {isa = PBXBuildFile; fileRef = D032F0C11AC3DA730069D6CC /* runner_4.png */; };
@@ -44,6 +43,7 @@
 		D0A5E1651AC268D3004B3FD8 /* Market_Deco.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D0A5E1641AC268D3004B3FD8 /* Market_Deco.ttf */; };
 		D0A5E1681AC27ACB004B3FD8 /* Lane.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A5E1671AC27ACB004B3FD8 /* Lane.m */; };
 		D0A5E16C1AC27C5A004B3FD8 /* SKColor+ColorAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A5E16B1AC27C5A004B3FD8 /* SKColor+ColorAdditions.m */; };
+		D0DE24031AC4D55200049742 /* runner_1.png in Resources */ = {isa = PBXBuildFile; fileRef = D0DE24021AC4D55200049742 /* runner_1.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,7 +70,6 @@
 		D032F0BA1AC3DA730069D6CC /* rate64x64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rate64x64.png; sourceTree = "<group>"; };
 		D032F0BB1AC3DA730069D6CC /* rate72x72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rate72x72.png; sourceTree = "<group>"; };
 		D032F0BC1AC3DA730069D6CC /* rate96x96.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rate96x96.png; sourceTree = "<group>"; };
-		D032F0BE1AC3DA730069D6CC /* runner_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = runner_1.png; sourceTree = "<group>"; };
 		D032F0BF1AC3DA730069D6CC /* runner_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = runner_2.png; sourceTree = "<group>"; };
 		D032F0C01AC3DA730069D6CC /* runner_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = runner_3.png; sourceTree = "<group>"; };
 		D032F0C11AC3DA730069D6CC /* runner_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = runner_4.png; sourceTree = "<group>"; };
@@ -104,6 +103,7 @@
 		D0A5E1671AC27ACB004B3FD8 /* Lane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Lane.m; sourceTree = "<group>"; };
 		D0A5E16A1AC27C5A004B3FD8 /* SKColor+ColorAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SKColor+ColorAdditions.h"; sourceTree = "<group>"; };
 		D0A5E16B1AC27C5A004B3FD8 /* SKColor+ColorAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SKColor+ColorAdditions.m"; sourceTree = "<group>"; };
+		D0DE24021AC4D55200049742 /* runner_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = runner_1.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,7 +153,7 @@
 		D032F0BD1AC3DA730069D6CC /* runner */ = {
 			isa = PBXGroup;
 			children = (
-				D032F0BE1AC3DA730069D6CC /* runner_1.png */,
+				D0DE24021AC4D55200049742 /* runner_1.png */,
 				D032F0BF1AC3DA730069D6CC /* runner_2.png */,
 				D032F0C01AC3DA730069D6CC /* runner_3.png */,
 				D032F0C11AC3DA730069D6CC /* runner_4.png */,
@@ -372,9 +372,9 @@
 				D032F0CB1AC3DA730069D6CC /* leaderboard64x64.png in Resources */,
 				D032F0D01AC3DA730069D6CC /* play96x96.png in Resources */,
 				D032F0D71AC3DA730069D6CC /* runner_2.png in Resources */,
-				D032F0D61AC3DA730069D6CC /* runner_1.png in Resources */,
 				D0A5E1631AC25F0F004B3FD8 /* DAYPBL__.TTF in Resources */,
 				D032F0CA1AC3DA730069D6CC /* leaderboard256x256.png in Resources */,
+				D0DE24031AC4D55200049742 /* runner_1.png in Resources */,
 				D032F0D51AC3DA730069D6CC /* rate96x96.png in Resources */,
 				D09A1C461AC0A47900C23BA0 /* LaunchScreen.xib in Resources */,
 				D032F0D81AC3DA730069D6CC /* runner_3.png in Resources */,

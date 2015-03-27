@@ -58,16 +58,14 @@
 
 - (void)setupRunner {
     
-    SKTexture *temp = _runnerFrames[0];
-    _runner = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:CGSizeMake(40., 40.)];
-    _runner.texture = temp;
-    _runner.position = CGPointMake(0, 100);
+    _runner = [SKSpriteNode spriteNodeWithTexture:_runnerFrames[0]];
+    _runner.position = CGPointMake(0, 0);
     
     SKAction *runningAnimation = [SKAction animateWithTextures:_runnerFrames timePerFrame:0.1f resize:YES restore:YES];
     SKAction *repeat = [SKAction repeatActionForever:runningAnimation];
     
     [self addChild:_runner];
-    [_runner runAction:repeat withKey:@"running"];
+    //[_runner runAction:repeat withKey:@"running"];
 }
 
 #pragma mark - Set up three lanes
