@@ -19,4 +19,18 @@
     return color;
 }
 
++ (SKColor *)opaqueWithColor:(SKColor *)color {
+    
+    CGFloat hue;
+    CGFloat saturation;
+    CGFloat brightness;
+    CGFloat alpha;
+    
+    [color getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
+    
+    SKColor *opaque = [SKColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1.0f];
+    
+    return opaque;
+}
+
 @end

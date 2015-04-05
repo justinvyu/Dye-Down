@@ -20,6 +20,9 @@
 @property (strong, nonatomic) SKSpriteNode *_runner;
 @property (strong, nonatomic) NSMutableArray *_runnerFrames;
 
+@property (nonatomic) NSUInteger score;
+@property (strong, nonatomic) SKLabelNode *scoreLabel;
+
 @property (strong, nonatomic) Lane *leftLane;
 @property (strong, nonatomic) Lane *middleLane;
 @property (strong, nonatomic) Lane *rightLane;
@@ -45,8 +48,17 @@
         [self._runnerFrames addObject:frameTexture];
     }
     
+    self.scoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Market Deco"];
+    self.scoreLabel.text = @"0";
+    self.scoreLabel.fontSize = 36.0f;
+    self.scoreLabel.zPosition = 1;
+    self.scoreLabel.position = CGPointMake(0, 200);
+    
     [self setupLanes];
     [self setupRunner];
+    
+    [self addChild:self.scoreLabel];
+
 }
 
 #define TIME 4.0f
@@ -60,9 +72,11 @@
     
     SKShapeNode *bar = [SKShapeNode shapeNodeWithRect:CGRectMake(ANCHOR_HORIZONTAL_OFFSET,
                                                                  -ANCHOR_VERTICAL_OFFSET+50,
-                                                                 self.view.frame.size.width, 50)];
-    bar.fillColor = [SKColor blackColor];
-    
+                                                                 self.view.frame.size.width, 30)];
+    bar.fillColor = [SKColor opaqueWithColor:[SKColor randomColor]];
+    bar.strokeColor = bar.fillColor;
+    bar.lineWidth = 2.0f;
+    bar.zPosition = 0;
     [self addChild:bar];
     [bar runAction:sequence];
 }
@@ -90,7 +104,7 @@
     [self.view addSubview:whiteView];
     whiteView.backgroundColor = [UIColor whiteColor];
     whiteView.alpha = 0.8f;
-    [UIView animateWithDuration: 0.2f
+    [UIView animateWithDuration: 0.4f
                      animations: ^{
                          whiteView.alpha = 0.0f;
                      }
@@ -119,7 +133,6 @@
     [middleColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
     
     if ((hue * 256) + 80 > self.previousHue && (hue * 256) - 80 < self.previousHue) {
-        NSLog(@"changing");
         [self paletteChange];
         return;
     }
@@ -170,6 +183,10 @@
                                                             self.view.frame.size.height)
                             atHorizontalPosition:2];
     
+    leftLane.zPosition = -1;
+    middleLane.zPosition = -1;
+    rightLane.zPosition = -1;
+    
     self.leftLane = leftLane;
     self.middleLane = middleLane;
     self.rightLane = rightLane;
@@ -214,6 +231,7 @@
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     
     [self paletteChange];
+    [self spawnBar];
 }
 
 -(void)update:(CFTimeInterval)currentTime {

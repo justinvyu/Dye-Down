@@ -20,10 +20,6 @@
 {
     [super viewDidLoad];
     
-    for (int i = 0; i < 8; i++) {
-        NSLog(@"%d", arc4random_uniform(8));
-    }
-    
     SKView * skView = (SKView *)self.view;
     skView.showsFPS = YES;
     skView.showsNodeCount = YES;

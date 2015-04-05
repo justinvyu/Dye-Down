@@ -11,5 +11,6 @@
 @interface SKColor (ColorAdditions)
 
 + (SKColor *)randomColor;
++ (SKColor *)opaqueWithColor:(SKColor *)color;
 
 @end
