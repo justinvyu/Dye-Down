@@ -10,6 +10,8 @@
 #import "Lane.h"
 #import "AppDelegate.h"
 
+#import "SKColor+ColorAdditions.h"
+
 #define ANCHOR_HORIZONTAL_OFFSET -self.view.frame.size.width/2
 #define ANCHOR_VERTICAL_OFFSET -self.view.frame.size.height/2
 
@@ -17,6 +19,10 @@
 
 @property (strong, nonatomic) SKSpriteNode *_runner;
 @property (strong, nonatomic) NSMutableArray *_runnerFrames;
+
+@property (strong, nonatomic) SKShapeNode *leftLane;
+@property (strong, nonatomic) SKShapeNode *middleLane;
+@property (strong, nonatomic) SKShapeNode *rightLane;
 
 @end
 
@@ -39,10 +45,9 @@
     
     [self setupLanes];
     [self setupRunner];
-    
 }
 
-#define TIME 2.0f
+#define TIME 4.0f
 
 - (void)spawnBar {
     
@@ -73,6 +78,8 @@
     [self._runner runAction:repeat withKey:@"running"];
 }
 
+#
+
 #pragma mark - Set up three lanes
 
 - (void)setupLanes {
@@ -94,6 +101,74 @@
                                                             self.view.frame.size.height)
                             atHorizontalPosition:2];
     
+    SKColor *middleColor = [SKColor randomColor];
+    middleLane.color = middleColor;
+    
+    /*
+    CGFloat red;
+    CGFloat green;
+    CGFloat blue;
+    CGFloat alpha;
+    [middleColor getRed:&red green:&green blue:&blue alpha:&alpha];
+    
+    NSLog(@"%f red, %f green, %f blue, %f alpha", red, green, blue, alpha);
+    
+    int interval = 60;
+    
+    CGFloat leftRed = red * 256 - interval;
+    if (leftRed < 0) {
+        leftRed = (256 + leftRed) / 256;
+    } else {
+        leftRed /= 256;
+    }
+    NSLog(@"%f", leftRed);
+    
+    CGFloat rightRed = (red * 256) + interval;
+    if (rightRed > 256) {
+        rightRed = ((int)rightRed % 256) / 256;
+    } else {
+        rightRed = rightRed / 256;
+    }
+    NSLog(@"%f", rightRed);
+    
+    CGFloat leftBlue = blue * 256 - interval;
+    if (leftBlue < 0) {
+        leftBlue = (256 + leftBlue) / 256;
+    } else {
+        leftBlue /= 256;
+    }
+    NSLog(@"%f", leftBlue);
+    
+    CGFloat rightBlue = (blue * 256) + interval;
+    if (rightBlue > 256) {
+        rightBlue = ((int)rightBlue % 256) / 256;
+    } else {
+        rightBlue = rightBlue / 256;
+    }
+    NSLog(@"%f", rightBlue);
+    
+    CGFloat leftGreen = green * 256 - interval;
+    if (leftGreen < 0) {
+        leftGreen = (256 + leftGreen) / 256;
+    } else {
+        leftGreen /= 256;
+    }
+    NSLog(@"%f", leftGreen);
+    
+    CGFloat rightGreen = (green * 256) + interval;
+    if (rightGreen > 256) {
+        rightGreen = ((int)rightGreen % 256) / 256;
+    } else {
+        rightGreen = rightGreen / 256;
+    }
+    NSLog(@"%f", rightGreen);
+    
+    leftLane.color = [SKColor colorWithRed:leftRed green:leftGreen blue:leftBlue alpha:alpha];
+    rightLane.color = [SKColor colorWithRed:rightRed green:rightGreen blue:rightBlue alpha:alpha];
+    */
+    
+    
+     
     [self addChild:leftLane];
     [self addChild:middleLane];
     [self addChild:rightLane];

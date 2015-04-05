@@ -32,8 +32,8 @@
 
 - (void)didMoveToView:(SKView *)view {
     
-    self.backgroundColor = [SKColor whiteColor];
-    
+    self.backgroundColor = [SKColor randomColor];
+        
     /*
     SKShapeNode *left = [SKShapeNode shapeNodeWithRect:CGRectMake(ANCHOR_HORIZONTAL_OFFSET, ANCHOR_VERTICAL_OFFSET, self.view.frame.size.width/3, self.view.frame.size.height)];
     SKShapeNode *middle = [SKShapeNode shapeNodeWithRect:CGRectMake(ANCHOR_HORIZONTAL_OFFSET+self.view.frame.size.width/3, ANCHOR_VERTICAL_OFFSET, self.view.frame.size.width/3, self.view.frame.size.height)];
@@ -93,6 +93,8 @@
     self.titleLabel.fontName = @"Market Deco";
     self.titleLabel.position = CGPointMake(0, self.view.frame.size.height/4);
     [self addChild:self.titleLabel];
+    
+    [self setupRunner];
     
 }
 

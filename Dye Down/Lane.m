@@ -17,12 +17,14 @@
     
     if (self) {
         self.path = CGPathCreateWithRect(rect, nil);
-        
-        self.color = [SKColor randomColor];
-        self.fillColor = self.color;
     }
     
     return self;
+}
+
+- (void)setColor:(UIColor *)color {
+    self.fillColor = color;
+    _color = color;
 }
 
 @end
