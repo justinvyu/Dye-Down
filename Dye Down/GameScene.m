@@ -20,9 +20,11 @@
 @property (strong, nonatomic) SKSpriteNode *_runner;
 @property (strong, nonatomic) NSMutableArray *_runnerFrames;
 
-@property (strong, nonatomic) SKShapeNode *leftLane;
-@property (strong, nonatomic) SKShapeNode *middleLane;
-@property (strong, nonatomic) SKShapeNode *rightLane;
+@property (strong, nonatomic) Lane *leftLane;
+@property (strong, nonatomic) Lane *middleLane;
+@property (strong, nonatomic) Lane *rightLane;
+
+@property (nonatomic) CGFloat previousHue;
 
 @end
 
@@ -32,7 +34,7 @@
     
     self.anchorPoint = CGPointMake(0.5, 0.5);
     self.backgroundColor = [UIColor whiteColor];
-    
+
     self._runnerFrames = [[NSMutableArray alloc] init];
     
     int numberOfFrames = 25;
@@ -56,7 +58,9 @@
     
     SKAction *sequence = [SKAction sequence:@[moveDown, remove]];
     
-    SKShapeNode *bar = [SKShapeNode shapeNodeWithRect:CGRectMake(ANCHOR_HORIZONTAL_OFFSET, -ANCHOR_VERTICAL_OFFSET+50, self.view.frame.size.width, 50)];
+    SKShapeNode *bar = [SKShapeNode shapeNodeWithRect:CGRectMake(ANCHOR_HORIZONTAL_OFFSET,
+                                                                 -ANCHOR_VERTICAL_OFFSET+50,
+                                                                 self.view.frame.size.width, 50)];
     bar.fillColor = [SKColor blackColor];
     
     [self addChild:bar];
@@ -78,7 +82,72 @@
     [self._runner runAction:repeat withKey:@"running"];
 }
 
-#
+#pragma mark - Change Colors
+
+- (void)paletteChange {
+    
+    UIView *whiteView = [[UIView alloc] initWithFrame:self.view.frame];
+    [self.view addSubview:whiteView];
+    whiteView.backgroundColor = [UIColor whiteColor];
+    whiteView.alpha = 0.8f;
+    [UIView animateWithDuration: 0.2f
+                     animations: ^{
+                         whiteView.alpha = 0.0f;
+                     }
+                     completion: ^(BOOL finished) {
+                         [whiteView removeFromSuperview];
+                     }
+     ];
+    
+    SKLabelNode *changeLabel = [SKLabelNode labelNodeWithFontNamed:@"Market Deco"];
+    changeLabel.text = @"PALETTE CHANGE";
+    changeLabel.position = CGPointMake(0, 100);
+    [self addChild:changeLabel];
+    
+    SKAction *wait = [SKAction waitForDuration:1.0f];
+    SKAction *removeLabel = [SKAction fadeOutWithDuration:0.5f];
+    [changeLabel runAction:[SKAction sequence:@[wait, removeLabel]]];
+    
+    SKColor *middleColor = [SKColor randomColor];
+    self.middleLane.color = middleColor;
+    
+    CGFloat hue;
+    CGFloat saturation;
+    CGFloat brightness;
+    CGFloat alpha;
+    
+    [middleColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
+    
+    if ((hue * 256) + 80 > self.previousHue && (hue * 256) - 80 < self.previousHue) {
+        NSLog(@"changing");
+        [self paletteChange];
+        return;
+    }
+    
+//    NSLog(@"%0.5f hue, %0.5f saturation, %0.5f brightness, %0.5f alpha", hue, saturation, brightness, alpha);
+    int interval = 85;
+    
+    CGFloat leftHue = (hue * 256 - interval);
+    if (leftHue < 0) {
+        leftHue = (256 + leftHue)/256;
+    } else {
+        leftHue = leftHue / 256;
+    }
+//    NSLog(@"leftHue : %f", leftHue);
+    
+    CGFloat rightHue = (hue * 256 + interval);
+    if (rightHue > 256) {
+        rightHue = (rightHue - 256) / 256;
+    } else {
+        rightHue /= 256;
+    }
+//    NSLog(@"rightHue : %f", rightHue);
+    
+    self.previousHue = hue*256;
+    
+    self.leftLane.color = [SKColor colorWithHue:leftHue saturation:saturation brightness:brightness alpha:alpha];
+    self.rightLane.color = [SKColor colorWithHue:rightHue saturation:saturation brightness:brightness alpha:alpha];
+}
 
 #pragma mark - Set up three lanes
 
@@ -101,74 +170,42 @@
                                                             self.view.frame.size.height)
                             atHorizontalPosition:2];
     
+    self.leftLane = leftLane;
+    self.middleLane = middleLane;
+    self.rightLane = rightLane;
+    
     SKColor *middleColor = [SKColor randomColor];
     middleLane.color = middleColor;
     
-    /*
-    CGFloat red;
-    CGFloat green;
-    CGFloat blue;
+    CGFloat hue;
+    CGFloat saturation;
+    CGFloat brightness;
     CGFloat alpha;
-    [middleColor getRed:&red green:&green blue:&blue alpha:&alpha];
     
-    NSLog(@"%f red, %f green, %f blue, %f alpha", red, green, blue, alpha);
+    [middleColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
     
+    self.previousHue = hue;
+    
+    NSLog(@"%0.5f hue, %0.5f saturation, %0.5f brightness, %0.5f alpha", hue, saturation, brightness, alpha);
     int interval = 60;
     
-    CGFloat leftRed = red * 256 - interval;
-    if (leftRed < 0) {
-        leftRed = (256 + leftRed) / 256;
+    CGFloat leftHue = (hue * 256 - interval);
+    if (leftHue < 0) {
+        leftHue = (256 + leftHue)/256;
     } else {
-        leftRed /= 256;
+        leftHue = leftHue / 256;
     }
-    NSLog(@"%f", leftRed);
+    NSLog(@"leftHue : %f", leftHue);
     
-    CGFloat rightRed = (red * 256) + interval;
-    if (rightRed > 256) {
-        rightRed = ((int)rightRed % 256) / 256;
-    } else {
-        rightRed = rightRed / 256;
+    CGFloat rightHue = (hue * 256 + interval);
+    if (rightHue < 256) {
+        rightHue = ((int)rightHue % 256) / 256;
     }
-    NSLog(@"%f", rightRed);
+    NSLog(@"rightHue : %f", rightHue);
     
-    CGFloat leftBlue = blue * 256 - interval;
-    if (leftBlue < 0) {
-        leftBlue = (256 + leftBlue) / 256;
-    } else {
-        leftBlue /= 256;
-    }
-    NSLog(@"%f", leftBlue);
+    leftLane.color = [SKColor colorWithHue:leftHue saturation:saturation brightness:brightness alpha:alpha];
+    rightLane.color = [SKColor colorWithHue:rightHue saturation:saturation brightness:brightness alpha:alpha];
     
-    CGFloat rightBlue = (blue * 256) + interval;
-    if (rightBlue > 256) {
-        rightBlue = ((int)rightBlue % 256) / 256;
-    } else {
-        rightBlue = rightBlue / 256;
-    }
-    NSLog(@"%f", rightBlue);
-    
-    CGFloat leftGreen = green * 256 - interval;
-    if (leftGreen < 0) {
-        leftGreen = (256 + leftGreen) / 256;
-    } else {
-        leftGreen /= 256;
-    }
-    NSLog(@"%f", leftGreen);
-    
-    CGFloat rightGreen = (green * 256) + interval;
-    if (rightGreen > 256) {
-        rightGreen = ((int)rightGreen % 256) / 256;
-    } else {
-        rightGreen = rightGreen / 256;
-    }
-    NSLog(@"%f", rightGreen);
-    
-    leftLane.color = [SKColor colorWithRed:leftRed green:leftGreen blue:leftBlue alpha:alpha];
-    rightLane.color = [SKColor colorWithRed:rightRed green:rightGreen blue:rightBlue alpha:alpha];
-    */
-    
-    
-     
     [self addChild:leftLane];
     [self addChild:middleLane];
     [self addChild:rightLane];
@@ -176,7 +213,7 @@
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     
-    
+    [self paletteChange];
 }
 
 -(void)update:(CFTimeInterval)currentTime {

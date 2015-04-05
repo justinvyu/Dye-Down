@@ -33,29 +33,6 @@
 - (void)didMoveToView:(SKView *)view {
     
     self.backgroundColor = [SKColor randomColor];
-        
-    /*
-    SKShapeNode *left = [SKShapeNode shapeNodeWithRect:CGRectMake(ANCHOR_HORIZONTAL_OFFSET, ANCHOR_VERTICAL_OFFSET, self.view.frame.size.width/3, self.view.frame.size.height)];
-    SKShapeNode *middle = [SKShapeNode shapeNodeWithRect:CGRectMake(ANCHOR_HORIZONTAL_OFFSET+self.view.frame.size.width/3, ANCHOR_VERTICAL_OFFSET, self.view.frame.size.width/3, self.view.frame.size.height)];
-    SKShapeNode *right = [SKShapeNode shapeNodeWithRect:CGRectMake(ANCHOR_HORIZONTAL_OFFSET+2*self.view.frame.size.width/3, ANCHOR_VERTICAL_OFFSET, self.view.frame.size.width/3, self.view.frame.size.height)];
-    left.fillColor = [self randomColor];
-    middle.fillColor = [self randomColor];
-    right.fillColor = [self randomColor];
-    [self addChild:left];
-    [self addChild:middle];
-    [self addChild:right];
-    
-    
-    SKAction *animateLane = [SKAction customActionWithDuration:2.0f actionBlock:^(SKNode *node, CGFloat elapsedTime) {
-        SKShapeNode *shape = (SKShapeNode *)node;
-        [SKAction waitForDuration:2.0f];
-        shape.fillColor = [self randomColor];
-        
-    }];
-    [left runAction:[SKAction repeatActionForever:animateLane]];
-    [middle runAction:[SKAction repeatActionForever:animateLane]];
-    [right runAction:[SKAction repeatActionForever:animateLane]];
-    */
     
     self._runnerFrames = [[NSMutableArray alloc] init];
     
@@ -88,8 +65,8 @@
     self.rateButton.position = CGPointMake(80, -80);
     [self addChild:self.rateButton];
     
-    self.titleLabel = [SKLabelNode labelNodeWithText:@"Dye Down"];
-    self.titleLabel.fontColor = [SKColor blackColor];
+    self.titleLabel = [SKLabelNode labelNodeWithText:@"DYE DOWN"];
+    self.titleLabel.fontColor = [SKColor whiteColor];
     self.titleLabel.fontName = @"Market Deco";
     self.titleLabel.position = CGPointMake(0, self.view.frame.size.height/4);
     [self addChild:self.titleLabel];
@@ -113,7 +90,7 @@
     [runner runAction:repeat withKey:@"running"];
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInNode:self];
     
