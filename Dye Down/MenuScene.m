@@ -8,6 +8,7 @@
 
 #import "MenuScene.h"
 #import "GameScene.h"
+#import "AppDelegate.h"
 
 #import "SKColor+ColorAdditions.h"
 
@@ -18,6 +19,7 @@
 @property (strong, nonatomic) SKSpriteNode *settingsButton;
 @property (strong, nonatomic) SKSpriteNode *rateButton;
 
+@property (strong, nonatomic) NSMutableArray *_runnerFrames;
 @property (strong, nonatomic) SKLabelNode *titleLabel;
 
 @end
@@ -55,6 +57,16 @@
     [right runAction:[SKAction repeatActionForever:animateLane]];
     */
     
+    self._runnerFrames = [[NSMutableArray alloc] init];
+    
+    int numberOfFrames = 25;
+    for (int i = 1; i <= numberOfFrames; i++) {
+        NSString *fileString = [NSString stringWithFormat:@"guy_%d.png", i];
+        UIImage *runnerImage = [UIImage imageNamed:fileString];
+        SKTexture *frameTexture = [SKTexture textureWithImage:runnerImage];
+        [self._runnerFrames addObject:frameTexture];
+    }
+    
     self.anchorPoint = CGPointMake(.5, .5);
     
     SKTexture *playButtonTexture = [SKTexture textureWithImageNamed:@"play"];
@@ -82,6 +94,21 @@
     self.titleLabel.position = CGPointMake(0, self.view.frame.size.height/4);
     [self addChild:self.titleLabel];
     
+}
+
+#pragma mark - Set up running animation
+
+- (void)setupRunner {
+    
+    SKSpriteNode *runner = [SKSpriteNode spriteNodeWithTexture:self._runnerFrames[0]];
+    runner.size = CGSizeMake(120., 120.);
+    runner.position = CGPointMake(0, -200);
+    
+    SKAction *runningAnimation = [SKAction animateWithTextures:self._runnerFrames timePerFrame:0.03f resize:YES restore:NO];
+    SKAction *repeat = [SKAction repeatActionForever:runningAnimation];
+    
+    [self addChild:runner];
+    [runner runAction:repeat withKey:@"running"];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

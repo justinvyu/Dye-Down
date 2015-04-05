@@ -8,29 +8,33 @@
 
 #import "GameScene.h"
 #import "Lane.h"
+#import "AppDelegate.h"
 
 #define ANCHOR_HORIZONTAL_OFFSET -self.view.frame.size.width/2
 #define ANCHOR_VERTICAL_OFFSET -self.view.frame.size.height/2
 
-@implementation GameScene {
-    
-    SKSpriteNode *_runner;
-    NSMutableArray *_runnerFrames;
-}
+@interface GameScene ()
+
+@property (strong, nonatomic) SKSpriteNode *_runner;
+@property (strong, nonatomic) NSMutableArray *_runnerFrames;
+
+@end
+
+@implementation GameScene
 
 -(void)didMoveToView:(SKView *)view {
     
     self.anchorPoint = CGPointMake(0.5, 0.5);
     self.backgroundColor = [UIColor whiteColor];
     
-    _runnerFrames = [[NSMutableArray alloc] initWithCapacity:4];
+    self._runnerFrames = [[NSMutableArray alloc] init];
     
-    int numberOfFrames = 6;
-    for (int i = 1; i < numberOfFrames; i++) {
-        NSString *fileString = [NSString stringWithFormat:@"runner_%d.png", i];
+    int numberOfFrames = 25;
+    for (int i = 1; i <= numberOfFrames; i++) {
+        NSString *fileString = [NSString stringWithFormat:@"guy_%d.png", i];
         UIImage *runnerImage = [UIImage imageNamed:fileString];
         SKTexture *frameTexture = [SKTexture textureWithImage:runnerImage];
-        [_runnerFrames addObject:frameTexture];
+        [self._runnerFrames addObject:frameTexture];
     }
     
     [self setupLanes];
@@ -58,14 +62,15 @@
 
 - (void)setupRunner {
     
-    _runner = [SKSpriteNode spriteNodeWithTexture:_runnerFrames[0]];
-    _runner.position = CGPointMake(0, 0);
+    self._runner = [SKSpriteNode spriteNodeWithTexture:self._runnerFrames[0]];
+    self._runner.size = CGSizeMake(120., 120.);
+    self._runner.position = CGPointMake(0, 0);
     
-    SKAction *runningAnimation = [SKAction animateWithTextures:_runnerFrames timePerFrame:0.1f resize:YES restore:YES];
+    SKAction *runningAnimation = [SKAction animateWithTextures:self._runnerFrames timePerFrame:0.03f resize:YES restore:NO];
     SKAction *repeat = [SKAction repeatActionForever:runningAnimation];
     
-    [self addChild:_runner];
-    //[_runner runAction:repeat withKey:@"running"];
+    [self addChild:self._runner];
+    [self._runner runAction:repeat withKey:@"running"];
 }
 
 #pragma mark - Set up three lanes
