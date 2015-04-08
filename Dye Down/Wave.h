@@ -10,4 +10,9 @@
 
 @interface Wave : SKShapeNode
 
+@property (strong, nonatomic) SKColor *color;
+@property (nonatomic) NSUInteger colorPosition;
+
+- (instancetype)initWithRect:(CGRect)rect andColorArray:(NSArray *)colorArray;
+
 @end

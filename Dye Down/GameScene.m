@@ -17,6 +17,8 @@
 #define ANCHOR_HORIZONTAL_OFFSET -self.view.frame.size.width/2
 #define ANCHOR_VERTICAL_OFFSET -self.view.frame.size.height/2
 
+#define TIME 4.0f
+
 static const uint32_t runnerCategory = 0;
 static const uint32_t waveCategory = 1;
 static const uint32_t powerupCategory = 2;
@@ -71,22 +73,36 @@ static const uint32_t powerupCategory = 2;
     [self.view addGestureRecognizer:self.swipeLeftGesture];
     
     self.scoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Market Deco"];
-    self.scoreLabel.text = @"0";
     self.scoreLabel.fontSize = 36.0f;
     self.scoreLabel.zPosition = 1;
     self.scoreLabel.position = CGPointMake(0, 200);
+    self.score = 0;
     
     [self setupLanes];
     [self setupRunner];
     
     [self addChild:self.scoreLabel];
+    SKAction *spawn = [SKAction runBlock:^{
+        [self spawnWave];
+        [SKAction waitForDuration:TIME];
+    }];
+    [self runAction:[SKAction repeatActionForever:spawn]];
+}
 
+#pragma mark - Properties
+
+- (void)setScore:(NSUInteger)score {
+    
+    _score = score;
+    self.scoreLabel.text = [NSString stringWithFormat:@"%d", score];
 }
 
 #pragma mark - UISwipeGestureRecognizer
 
 - (void)handleSwipeLeft:(UISwipeGestureRecognizer *)gesture {
-    if (gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateEnded || gesture.state == UIGestureRecognizerStateChanged) {
+    if (gesture.state == UIGestureRecognizerStateBegan ||
+        gesture.state == UIGestureRecognizerStateEnded ||
+        gesture.state == UIGestureRecognizerStateChanged) {
         if (self._runner.horizontalPosition != 0) {
             self._runner.horizontalPosition--;
         }
@@ -94,14 +110,15 @@ static const uint32_t powerupCategory = 2;
 }
 
 - (void)handleSwipeRight:(UISwipeGestureRecognizer *)gesture {
-    if (gesture.state == UIGestureRecognizerStateEnded || gesture.state == UIGestureRecognizerStateChanged) {
+    if (gesture.state == UIGestureRecognizerStateBegan ||
+        gesture.state == UIGestureRecognizerStateEnded ||
+        gesture.state == UIGestureRecognizerStateChanged) {
         if (self._runner.horizontalPosition != 2) {
             self._runner.horizontalPosition++;
         }
     }
 }
 
-#define TIME 4.0f
 
 - (void)spawnWave {
     
@@ -110,13 +127,10 @@ static const uint32_t powerupCategory = 2;
     
     SKAction *sequence = [SKAction sequence:@[moveDown, remove]];
     
-    Wave *wave = [Wave shapeNodeWithRect:CGRectMake(ANCHOR_HORIZONTAL_OFFSET,
-                                                                 -ANCHOR_VERTICAL_OFFSET+50,
-                                                                 self.view.frame.size.width, 30)];
-    wave.fillColor = [SKColor opaqueWithColor:[SKColor randomColor]];
-    wave.strokeColor = wave.fillColor;
-    wave.lineWidth = 2.0f;
-    wave.zPosition = 0;
+    CGRect rect = CGRectMake(ANCHOR_HORIZONTAL_OFFSET,
+                             -ANCHOR_VERTICAL_OFFSET+50,
+                             self.view.frame.size.width, 30);
+    Wave *wave = [[Wave alloc] initWithRect:rect andColorArray:self.colors];
     
     wave.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:wave.path];
     wave.physicsBody.categoryBitMask = waveCategory;
@@ -135,7 +149,7 @@ static const uint32_t powerupCategory = 2;
         SKNode *nodeB = contact.bodyB.node;
         if ([nodeB isKindOfClass:[Wave class]]) {
             // runner hit a wave
-            []
+            [self handleContactBetweenRunner:(Runner *)nodeA andWave:(Wave *)nodeB];
         }
     }
 }
@@ -288,9 +302,20 @@ static const uint32_t powerupCategory = 2;
     [self addChild:rightLane];
 }
 
+- (void)handleContactBetweenRunner:(Runner *)runner andWave:(Wave *)wave {
+    NSLog(@"Handling...");
+    if (runner.horizontalPosition == wave.colorPosition) {
+        NSLog(@"Match!");
+    } else {
+        NSLog(@"YOU LOSE");
+        [self._runner removeFromParent];
+    }
+}
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     //[self paletteChange];
-    [self spawnWave];
+    // TESTING
+    //[self spawnWave];
 }
 
 -(void)update:(CFTimeInterval)currentTime {
