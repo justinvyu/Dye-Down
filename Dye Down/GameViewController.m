@@ -24,6 +24,7 @@
     skView.showsFPS = YES;
     skView.showsNodeCount = YES;
     
+    skView.backgroundColor = [SKColor whiteColor];
     MenuScene *menu = [[MenuScene alloc] initWithSize:[UIScreen mainScreen].bounds.size];
     [skView presentScene:menu];
 }

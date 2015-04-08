@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D010CDE41AD228F100E800CE /* Runner.m in Sources */ = {isa = PBXBuildFile; fileRef = D010CDE31AD228F100E800CE /* Runner.m */; };
+		D010CDE71AD2290800E800CE /* Wave.m in Sources */ = {isa = PBXBuildFile; fileRef = D010CDE61AD2290800E800CE /* Wave.m */; };
 		D032F0C91AC3DA730069D6CC /* leaderboard128x128.png in Resources */ = {isa = PBXBuildFile; fileRef = D032F0B01AC3DA730069D6CC /* leaderboard128x128.png */; };
 		D032F0CA1AC3DA730069D6CC /* leaderboard256x256.png in Resources */ = {isa = PBXBuildFile; fileRef = D032F0B11AC3DA730069D6CC /* leaderboard256x256.png */; };
 		D032F0CB1AC3DA730069D6CC /* leaderboard64x64.png in Resources */ = {isa = PBXBuildFile; fileRef = D032F0B21AC3DA730069D6CC /* leaderboard64x64.png */; };
@@ -76,6 +78,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D010CDE21AD228F100E800CE /* Runner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Runner.h; sourceTree = "<group>"; };
+		D010CDE31AD228F100E800CE /* Runner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Runner.m; sourceTree = "<group>"; };
+		D010CDE51AD2290800E800CE /* Wave.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Wave.h; sourceTree = "<group>"; };
+		D010CDE61AD2290800E800CE /* Wave.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Wave.m; sourceTree = "<group>"; };
 		D032F0B01AC3DA730069D6CC /* leaderboard128x128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leaderboard128x128.png; sourceTree = "<group>"; };
 		D032F0B11AC3DA730069D6CC /* leaderboard256x256.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leaderboard256x256.png; sourceTree = "<group>"; };
 		D032F0B21AC3DA730069D6CC /* leaderboard64x64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leaderboard64x64.png; sourceTree = "<group>"; };
@@ -333,6 +339,10 @@
 			children = (
 				D0A5E1661AC27ACB004B3FD8 /* Lane.h */,
 				D0A5E1671AC27ACB004B3FD8 /* Lane.m */,
+				D010CDE21AD228F100E800CE /* Runner.h */,
+				D010CDE31AD228F100E800CE /* Runner.m */,
+				D010CDE51AD2290800E800CE /* Wave.h */,
+				D010CDE61AD2290800E800CE /* Wave.m */,
 			);
 			name = "Custom Nodes";
 			sourceTree = "<group>";
@@ -493,10 +503,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				D09A1C3E1AC0A47900C23BA0 /* GameViewController.m in Sources */,
+				D010CDE71AD2290800E800CE /* Wave.m in Sources */,
 				D0A5E15C1AC219C4004B3FD8 /* MenuScene.m in Sources */,
 				D09A1C361AC0A47900C23BA0 /* AppDelegate.m in Sources */,
 				D0A5E16C1AC27C5A004B3FD8 /* SKColor+ColorAdditions.m in Sources */,
 				D0A5E1681AC27ACB004B3FD8 /* Lane.m in Sources */,
+				D010CDE41AD228F100E800CE /* Runner.m in Sources */,
 				D09A1C391AC0A47900C23BA0 /* GameScene.m in Sources */,
 				D09A1C331AC0A47900C23BA0 /* main.m in Sources */,
 			);

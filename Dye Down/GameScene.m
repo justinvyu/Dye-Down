@@ -8,24 +8,35 @@
 
 #import "GameScene.h"
 #import "Lane.h"
-#import "AppDelegate.h"
+#import "Runner.h"
+#import "Wave.h"
 
+#import "AppDelegate.h"
 #import "SKColor+ColorAdditions.h"
 
 #define ANCHOR_HORIZONTAL_OFFSET -self.view.frame.size.width/2
 #define ANCHOR_VERTICAL_OFFSET -self.view.frame.size.height/2
 
-@interface GameScene ()
+static const uint32_t runnerCategory = 0;
+static const uint32_t waveCategory = 1;
+static const uint32_t powerupCategory = 2;
 
-@property (strong, nonatomic) SKSpriteNode *_runner;
+@interface GameScene () <SKPhysicsContactDelegate>
+
+@property (strong, nonatomic) Runner *_runner;
 @property (strong, nonatomic) NSMutableArray *_runnerFrames;
 
 @property (nonatomic) NSUInteger score;
 @property (strong, nonatomic) SKLabelNode *scoreLabel;
 
+@property (strong, nonatomic) NSArray *colors;
+
 @property (strong, nonatomic) Lane *leftLane;
 @property (strong, nonatomic) Lane *middleLane;
 @property (strong, nonatomic) Lane *rightLane;
+
+@property (strong, nonatomic) UISwipeGestureRecognizer *swipeRightGesture;
+@property (strong, nonatomic) UISwipeGestureRecognizer *swipeLeftGesture;
 
 @property (nonatomic) CGFloat previousHue;
 
@@ -33,11 +44,13 @@
 
 @implementation GameScene
 
+#pragma mark - Initializing sprites/UI
+
 -(void)didMoveToView:(SKView *)view {
     
     self.anchorPoint = CGPointMake(0.5, 0.5);
     self.backgroundColor = [UIColor whiteColor];
-
+    self.physicsWorld.contactDelegate = self;
     self._runnerFrames = [[NSMutableArray alloc] init];
     
     int numberOfFrames = 25;
@@ -47,6 +60,15 @@
         SKTexture *frameTexture = [SKTexture textureWithImage:runnerImage];
         [self._runnerFrames addObject:frameTexture];
     }
+    
+    self.swipeLeftGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeLeft:)];
+    [self.swipeLeftGesture setDirection:UISwipeGestureRecognizerDirectionLeft];
+    
+    self.swipeRightGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeRight:)];
+    [self.swipeRightGesture setDirection:UISwipeGestureRecognizerDirectionRight];
+    
+    [self.view addGestureRecognizer:self.swipeRightGesture];
+    [self.view addGestureRecognizer:self.swipeLeftGesture];
     
     self.scoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Market Deco"];
     self.scoreLabel.text = @"0";
@@ -61,42 +83,79 @@
 
 }
 
+#pragma mark - UISwipeGestureRecognizer
+
+- (void)handleSwipeLeft:(UISwipeGestureRecognizer *)gesture {
+    if (gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateEnded || gesture.state == UIGestureRecognizerStateChanged) {
+        if (self._runner.horizontalPosition != 0) {
+            self._runner.horizontalPosition--;
+        }
+    }
+}
+
+- (void)handleSwipeRight:(UISwipeGestureRecognizer *)gesture {
+    if (gesture.state == UIGestureRecognizerStateEnded || gesture.state == UIGestureRecognizerStateChanged) {
+        if (self._runner.horizontalPosition != 2) {
+            self._runner.horizontalPosition++;
+        }
+    }
+}
+
 #define TIME 4.0f
 
-- (void)spawnBar {
+- (void)spawnWave {
     
     SKAction *moveDown = [SKAction moveToY:-self.view.frame.size.height-100 duration:TIME];
     SKAction *remove = [SKAction removeFromParent];
     
     SKAction *sequence = [SKAction sequence:@[moveDown, remove]];
     
-    SKShapeNode *bar = [SKShapeNode shapeNodeWithRect:CGRectMake(ANCHOR_HORIZONTAL_OFFSET,
+    Wave *wave = [Wave shapeNodeWithRect:CGRectMake(ANCHOR_HORIZONTAL_OFFSET,
                                                                  -ANCHOR_VERTICAL_OFFSET+50,
                                                                  self.view.frame.size.width, 30)];
-    bar.fillColor = [SKColor opaqueWithColor:[SKColor randomColor]];
-    bar.strokeColor = bar.fillColor;
-    bar.lineWidth = 2.0f;
-    bar.zPosition = 0;
-    [self addChild:bar];
-    [bar runAction:sequence];
+    wave.fillColor = [SKColor opaqueWithColor:[SKColor randomColor]];
+    wave.strokeColor = wave.fillColor;
+    wave.lineWidth = 2.0f;
+    wave.zPosition = 0;
+    
+    wave.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:wave.path];
+    wave.physicsBody.categoryBitMask = waveCategory;
+    wave.physicsBody.contactTestBitMask = runnerCategory;
+    wave.physicsBody.affectedByGravity = NO;
+    
+    [self addChild:wave];
+    [wave runAction:sequence];
+}
+
+#pragma mark - Physics Delegate
+
+- (void)didBeginContact:(SKPhysicsContact *)contact {
+    SKNode *nodeA = contact.bodyA.node;
+    if ([nodeA isKindOfClass:[Runner class]]) {
+        SKNode *nodeB = contact.bodyB.node;
+        if ([nodeB isKindOfClass:[Wave class]]) {
+            // runner hit a wave
+            []
+        }
+    }
 }
 
 #pragma mark - Set up running animation
 
 - (void)setupRunner {
     
-    self._runner = [SKSpriteNode spriteNodeWithTexture:self._runnerFrames[0]];
-    self._runner.size = CGSizeMake(120., 120.);
-    self._runner.position = CGPointMake(0, 0);
-    
-    SKAction *runningAnimation = [SKAction animateWithTextures:self._runnerFrames timePerFrame:0.03f resize:YES restore:NO];
-    SKAction *repeat = [SKAction repeatActionForever:runningAnimation];
-    
+    self._runner = [[Runner alloc] initAtHorizontalPosition:1];
+    self._runner.physicsBody = [SKPhysicsBody bodyWithTexture:self._runnerFrames[0] size:self._runner.size];
+    self._runner.physicsBody.categoryBitMask = runnerCategory;
+    self._runner.physicsBody.contactTestBitMask = waveCategory;
+    self._runner.physicsBody.dynamic = false;
+    self._runner.physicsBody.affectedByGravity = NO;
     [self addChild:self._runner];
-    [self._runner runAction:repeat withKey:@"running"];
 }
 
 #pragma mark - Change Colors
+
+#define HUE_INTERVAL 60
 
 - (void)paletteChange {
     
@@ -138,9 +197,8 @@
     }
     
 //    NSLog(@"%0.5f hue, %0.5f saturation, %0.5f brightness, %0.5f alpha", hue, saturation, brightness, alpha);
-    int interval = 85;
     
-    CGFloat leftHue = (hue * 256 - interval);
+    CGFloat leftHue = (hue * 256 - HUE_INTERVAL);
     if (leftHue < 0) {
         leftHue = (256 + leftHue)/256;
     } else {
@@ -148,7 +206,7 @@
     }
 //    NSLog(@"leftHue : %f", leftHue);
     
-    CGFloat rightHue = (hue * 256 + interval);
+    CGFloat rightHue = (hue * 256 + HUE_INTERVAL);
     if (rightHue > 256) {
         rightHue = (rightHue - 256) / 256;
     } else {
@@ -160,6 +218,8 @@
     
     self.leftLane.color = [SKColor colorWithHue:leftHue saturation:saturation brightness:brightness alpha:alpha];
     self.rightLane.color = [SKColor colorWithHue:rightHue saturation:saturation brightness:brightness alpha:alpha];
+    
+    self.colors = @[self.leftLane.color, self.middleLane.color, self.rightLane.color];
 }
 
 #pragma mark - Set up three lanes
@@ -192,7 +252,7 @@
     self.rightLane = rightLane;
     
     SKColor *middleColor = [SKColor randomColor];
-    middleLane.color = middleColor;
+    self.middleLane.color = middleColor;
     
     CGFloat hue;
     CGFloat saturation;
@@ -202,41 +262,39 @@
     [middleColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
     
     self.previousHue = hue;
-    
-    NSLog(@"%0.5f hue, %0.5f saturation, %0.5f brightness, %0.5f alpha", hue, saturation, brightness, alpha);
-    int interval = 60;
-    
-    CGFloat leftHue = (hue * 256 - interval);
+        
+    CGFloat leftHue = (hue * 256 - HUE_INTERVAL);
     if (leftHue < 0) {
         leftHue = (256 + leftHue)/256;
     } else {
-        leftHue = leftHue / 256;
+        leftHue /= 256;
     }
-    NSLog(@"leftHue : %f", leftHue);
     
-    CGFloat rightHue = (hue * 256 + interval);
-    if (rightHue < 256) {
-        rightHue = ((int)rightHue % 256) / 256;
+    CGFloat rightHue = (hue * 256 + HUE_INTERVAL);
+    if (rightHue > 256) {
+        rightHue = (rightHue - 256) / 256;
+    } else {
+        rightHue /= 256;
     }
     NSLog(@"rightHue : %f", rightHue);
     
-    leftLane.color = [SKColor colorWithHue:leftHue saturation:saturation brightness:brightness alpha:alpha];
-    rightLane.color = [SKColor colorWithHue:rightHue saturation:saturation brightness:brightness alpha:alpha];
+    self.leftLane.color = [SKColor colorWithHue:leftHue saturation:saturation brightness:brightness alpha:alpha];
+    self.rightLane.color = [SKColor colorWithHue:rightHue saturation:saturation brightness:brightness alpha:alpha];
     
+    self.colors = @[self.leftLane.color, self.middleLane.color, self.rightLane.color];
+
     [self addChild:leftLane];
     [self addChild:middleLane];
     [self addChild:rightLane];
 }
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    
-    [self paletteChange];
-    [self spawnBar];
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    //[self paletteChange];
+    [self spawnWave];
 }
 
 -(void)update:(CFTimeInterval)currentTime {
 
-    
 }
 
 @end

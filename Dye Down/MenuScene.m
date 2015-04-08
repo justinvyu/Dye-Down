@@ -28,8 +28,6 @@
 
 #define BUTTON_SIZE 50.
 
-
-
 - (void)didMoveToView:(SKView *)view {
     
     self.backgroundColor = [SKColor randomColor];
