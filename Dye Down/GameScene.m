@@ -82,11 +82,8 @@ static const uint32_t powerupCategory = 2;
     [self setupRunner];
     
     [self addChild:self.scoreLabel];
-    SKAction *spawn = [SKAction runBlock:^{
-        [self spawnWave];
-        [SKAction waitForDuration:TIME];
-    }];
-    [self runAction:[SKAction repeatActionForever:spawn]];
+
+    //[self runAction:[SKAction repeatActionForever:spawn]];
 }
 
 #pragma mark - Properties
@@ -94,7 +91,7 @@ static const uint32_t powerupCategory = 2;
 - (void)setScore:(NSUInteger)score {
     
     _score = score;
-    self.scoreLabel.text = [NSString stringWithFormat:@"%d", score];
+    self.scoreLabel.text = [NSString stringWithFormat:@"%d", (int)score];
 }
 
 #pragma mark - UISwipeGestureRecognizer
@@ -104,6 +101,7 @@ static const uint32_t powerupCategory = 2;
         gesture.state == UIGestureRecognizerStateEnded ||
         gesture.state == UIGestureRecognizerStateChanged) {
         if (self._runner.horizontalPosition != 0) {
+            //NSLog(@"Horizontal Position: %d", (int)self._runner.horizontalPosition);
             self._runner.horizontalPosition--;
         }
     }
@@ -114,6 +112,7 @@ static const uint32_t powerupCategory = 2;
         gesture.state == UIGestureRecognizerStateEnded ||
         gesture.state == UIGestureRecognizerStateChanged) {
         if (self._runner.horizontalPosition != 2) {
+            //NSLog(@"Horizontal Position: %d", (int)self._runner.horizontalPosition);
             self._runner.horizontalPosition++;
         }
     }
@@ -165,6 +164,8 @@ static const uint32_t powerupCategory = 2;
     self._runner.physicsBody.dynamic = false;
     self._runner.physicsBody.affectedByGravity = NO;
     [self addChild:self._runner];
+
+
 }
 
 #pragma mark - Change Colors
