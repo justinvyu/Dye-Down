@@ -29,6 +29,9 @@
 		D032F0DE1AC3DA730069D6CC /* settings64x64.png in Resources */ = {isa = PBXBuildFile; fileRef = D032F0C61AC3DA730069D6CC /* settings64x64.png */; };
 		D032F0DF1AC3DA730069D6CC /* settings72x72.png in Resources */ = {isa = PBXBuildFile; fileRef = D032F0C71AC3DA730069D6CC /* settings72x72.png */; };
 		D032F0E01AC3DA730069D6CC /* settings96x96.png in Resources */ = {isa = PBXBuildFile; fileRef = D032F0C81AC3DA730069D6CC /* settings96x96.png */; };
+		D069F2741AD790D800622D0F /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = D069F2711AD790D800622D0F /* pause.png */; };
+		D069F2751AD790D800622D0F /* pause2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D069F2721AD790D800622D0F /* pause2x.png */; };
+		D069F2761AD790D800622D0F /* pause3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D069F2731AD790D800622D0F /* pause3x.png */; };
 		D09A1C331AC0A47900C23BA0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D09A1C321AC0A47900C23BA0 /* main.m */; };
 		D09A1C361AC0A47900C23BA0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D09A1C351AC0A47900C23BA0 /* AppDelegate.m */; };
 		D09A1C391AC0A47900C23BA0 /* GameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = D09A1C381AC0A47900C23BA0 /* GameScene.m */; };
@@ -106,6 +109,9 @@
 		D032F0C61AC3DA730069D6CC /* settings64x64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings64x64.png; sourceTree = "<group>"; };
 		D032F0C71AC3DA730069D6CC /* settings72x72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings72x72.png; sourceTree = "<group>"; };
 		D032F0C81AC3DA730069D6CC /* settings96x96.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings96x96.png; sourceTree = "<group>"; };
+		D069F2711AD790D800622D0F /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause.png; sourceTree = "<group>"; };
+		D069F2721AD790D800622D0F /* pause2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause2x.png; sourceTree = "<group>"; };
+		D069F2731AD790D800622D0F /* pause3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause3x.png; sourceTree = "<group>"; };
 		D09A1C2D1AC0A47900C23BA0 /* Dye Down.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dye Down.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D09A1C311AC0A47900C23BA0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D09A1C321AC0A47900C23BA0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -196,6 +202,9 @@
 				D032F0C61AC3DA730069D6CC /* settings64x64.png */,
 				D032F0C71AC3DA730069D6CC /* settings72x72.png */,
 				D032F0C81AC3DA730069D6CC /* settings96x96.png */,
+				D069F2711AD790D800622D0F /* pause.png */,
+				D069F2721AD790D800622D0F /* pause2x.png */,
+				D069F2731AD790D800622D0F /* pause3x.png */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -464,12 +473,14 @@
 				D0A5E1651AC268D3004B3FD8 /* Market_Deco.ttf in Resources */,
 				D0E6C33B1AD0FAAA00C7AFAA /* guy_1.png in Resources */,
 				D0E6C3471AD0FAAA00C7AFAA /* guy_13.png in Resources */,
+				D069F2741AD790D800622D0F /* pause.png in Resources */,
 				D032F0CE1AC3DA730069D6CC /* play256x256.png in Resources */,
 				D0E6C3441AD0FAAA00C7AFAA /* guy_10.png in Resources */,
 				D0E6C3521AD0FAAA00C7AFAA /* guy_24.png in Resources */,
 				D032F0D31AC3DA730069D6CC /* rate64x64.png in Resources */,
 				D0E6C33E1AD0FAAA00C7AFAA /* guy_4.png in Resources */,
 				D0E6C33C1AD0FAAA00C7AFAA /* guy_2.png in Resources */,
+				D069F2761AD790D800622D0F /* pause3x.png in Resources */,
 				D0E6C33D1AD0FAAA00C7AFAA /* guy_3.png in Resources */,
 				D0E6C3531AD0FAAA00C7AFAA /* guy_25.png in Resources */,
 				D032F0DC1AC3DA730069D6CC /* settings128x128.png in Resources */,
@@ -484,6 +495,7 @@
 				D032F0CC1AC3DA730069D6CC /* leaderboard72x72.png in Resources */,
 				D032F0DE1AC3DA730069D6CC /* settings64x64.png in Resources */,
 				D0E6C34F1AD0FAAA00C7AFAA /* guy_21.png in Resources */,
+				D069F2751AD790D800622D0F /* pause2x.png in Resources */,
 				D032F0E01AC3DA730069D6CC /* settings96x96.png in Resources */,
 				D0E6C3481AD0FAAA00C7AFAA /* guy_14.png in Resources */,
 				D0E6C3401AD0FAAA00C7AFAA /* guy_6.png in Resources */,

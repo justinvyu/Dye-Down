@@ -26,7 +26,6 @@
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define VERTICAL_POSITION -self.screenHeight / 2 + self.size.height
 
-
 - (instancetype)initAtHorizontalPosition:(NSUInteger)horizontalPosition {
     
     self = [super init];

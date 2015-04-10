@@ -26,6 +26,7 @@
 // Nodes
 @property (strong, nonatomic) Runner *_runner;
 @property (strong, nonatomic) SKLabelNode *scoreLabel;
+@property (strong ,nonatomic) SKSpriteNode *pauseButton;
 @property (strong, nonatomic) Lane *leftLane;
 @property (strong, nonatomic) Lane *middleLane;
 @property (strong, nonatomic) Lane *rightLane;
@@ -43,6 +44,7 @@
 //@property (nonatomic) CFTimeInterval startTime;
 //@property (nonatomic) CFTimeInterval timePassed;
 @property (nonatomic) NSUInteger intervalBetweenWaves;
+@property (strong, nonatomic) Wave *currentWave;
 
 @end
 
@@ -79,6 +81,7 @@
     [self setupScoreLabel];
     [self setupLanes];
     [self setupRunner];
+    [self setupScoreLabel];
     
     SKAction *wait = [SKAction waitForDuration:self.intervalBetweenWaves];
     SKAction *sequence = [SKAction sequence:@[wait, [SKAction performSelector:@selector(spawnWave) onTarget:self]]];
@@ -154,7 +157,10 @@
         SKNode *nodeB = contact.bodyB.node;
         if ([nodeB isKindOfClass:[Wave class]]) {
             // runner hit a wave
-            [self handleContactBetweenRunner:(Runner *)nodeA andWave:(Wave *)nodeB];
+            if (![nodeB isEqual:self.currentWave]) {
+                self.currentWave = (Wave *)nodeB;
+                [self handleContactBetweenRunner:(Runner *)nodeA andWave:(Wave *)nodeB];
+            }
         }
     }
 }
@@ -170,6 +176,16 @@
     self._runner.physicsBody.dynamic = false;
     self._runner.physicsBody.affectedByGravity = NO;
     [self addChild:self._runner];
+}
+
+#pragma mark - Create pause button
+
+- (void)setupPauseButton {
+    
+    self.pauseButton = [SKSpriteNode spriteNodeWithImageNamed:@"pause"];
+    self.pauseButton.zPosition = 1;
+    self.pauseButton.position = CGPointMake(0, 0);//CGPointMake(ANCHOR_HORIZONTAL_OFFSET, ANCHOR_VERTICAL_OFFSET);
+    [self addChild:self.pauseButton];
 }
 
 #pragma mark - Setup score label
@@ -320,12 +336,18 @@
 #pragma mark - Handling contact
 
 - (void)handleContactBetweenRunner:(Runner *)runner andWave:(Wave *)wave {
-    
+
     if (runner.horizontalPosition == wave.colorPosition) {
-        NSLog(@"Match!");
+        [self match];
     } else {
         [self lose];
     }
+}
+
+#pragma mark - Matching
+
+- (void)match {
+    self.score++;
 }
 
 #pragma mark - Losing
