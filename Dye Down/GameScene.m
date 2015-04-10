@@ -14,33 +14,35 @@
 #import "AppDelegate.h"
 #import "SKColor+ColorAdditions.h"
 
-#define ANCHOR_HORIZONTAL_OFFSET -self.view.frame.size.width/2
-#define ANCHOR_VERTICAL_OFFSET -self.view.frame.size.height/2
-
-#define TIME 4.0f
-
-static const uint32_t runnerCategory = 0;
-static const uint32_t waveCategory = 1;
-static const uint32_t powerupCategory = 2;
+#import "JYConstants.h"
 
 @interface GameScene () <SKPhysicsContactDelegate>
 
-@property (strong, nonatomic) Runner *_runner;
+// Data
 @property (strong, nonatomic) NSMutableArray *_runnerFrames;
-
 @property (nonatomic) NSUInteger score;
+@property (strong, nonatomic) NSMutableArray *waves;
+
+// Nodes
+@property (strong, nonatomic) Runner *_runner;
 @property (strong, nonatomic) SKLabelNode *scoreLabel;
-
-@property (strong, nonatomic) NSArray *colors;
-
 @property (strong, nonatomic) Lane *leftLane;
 @property (strong, nonatomic) Lane *middleLane;
 @property (strong, nonatomic) Lane *rightLane;
 
+// Gestures
 @property (strong, nonatomic) UISwipeGestureRecognizer *swipeRightGesture;
 @property (strong, nonatomic) UISwipeGestureRecognizer *swipeLeftGesture;
 
+// Color
+@property (strong, nonatomic) NSArray *colors;
 @property (nonatomic) CGFloat previousHue;
+
+// Utils
+//@property (nonatomic) BOOL gameStart;
+//@property (nonatomic) CFTimeInterval startTime;
+//@property (nonatomic) CFTimeInterval timePassed;
+@property (nonatomic) NSUInteger intervalBetweenWaves;
 
 @end
 
@@ -54,6 +56,8 @@ static const uint32_t powerupCategory = 2;
     self.backgroundColor = [UIColor whiteColor];
     self.physicsWorld.contactDelegate = self;
     self._runnerFrames = [[NSMutableArray alloc] init];
+    self.intervalBetweenWaves = 3.0f;
+//    self.gameStart = YES;
     
     int numberOfFrames = 25;
     for (int i = 1; i <= numberOfFrames; i++) {
@@ -72,17 +76,15 @@ static const uint32_t powerupCategory = 2;
     [self.view addGestureRecognizer:self.swipeRightGesture];
     [self.view addGestureRecognizer:self.swipeLeftGesture];
     
-    self.scoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Market Deco"];
-    self.scoreLabel.fontSize = 36.0f;
-    self.scoreLabel.zPosition = 1;
-    self.scoreLabel.position = CGPointMake(0, 200);
-    self.score = 0;
-    
+    [self setupScoreLabel];
     [self setupLanes];
     [self setupRunner];
     
-    [self addChild:self.scoreLabel];
-
+    SKAction *wait = [SKAction waitForDuration:self.intervalBetweenWaves];
+    SKAction *sequence = [SKAction sequence:@[wait, [SKAction performSelector:@selector(spawnWave) onTarget:self]]];
+    SKAction *repeat = [SKAction repeatActionForever:sequence];
+    [self runAction:repeat];
+    
     //[self runAction:[SKAction repeatActionForever:spawn]];
 }
 
@@ -97,6 +99,7 @@ static const uint32_t powerupCategory = 2;
 #pragma mark - UISwipeGestureRecognizer
 
 - (void)handleSwipeLeft:(UISwipeGestureRecognizer *)gesture {
+    
     if (gesture.state == UIGestureRecognizerStateBegan ||
         gesture.state == UIGestureRecognizerStateEnded ||
         gesture.state == UIGestureRecognizerStateChanged) {
@@ -108,6 +111,7 @@ static const uint32_t powerupCategory = 2;
 }
 
 - (void)handleSwipeRight:(UISwipeGestureRecognizer *)gesture {
+    
     if (gesture.state == UIGestureRecognizerStateBegan ||
         gesture.state == UIGestureRecognizerStateEnded ||
         gesture.state == UIGestureRecognizerStateChanged) {
@@ -118,6 +122,7 @@ static const uint32_t powerupCategory = 2;
     }
 }
 
+#pragma mark - Spawning Waves
 
 - (void)spawnWave {
     
@@ -138,6 +143,7 @@ static const uint32_t powerupCategory = 2;
     
     [self addChild:wave];
     [wave runAction:sequence];
+    // Add to waves array
 }
 
 #pragma mark - Physics Delegate
@@ -153,7 +159,7 @@ static const uint32_t powerupCategory = 2;
     }
 }
 
-#pragma mark - Set up running animation
+#pragma mark - Create runner
 
 - (void)setupRunner {
     
@@ -164,13 +170,21 @@ static const uint32_t powerupCategory = 2;
     self._runner.physicsBody.dynamic = false;
     self._runner.physicsBody.affectedByGravity = NO;
     [self addChild:self._runner];
+}
 
+#pragma mark - Setup score label
 
+- (void)setupScoreLabel {
+    
+    self.scoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Market Deco"];
+    self.scoreLabel.fontSize = 36.0f;
+    self.scoreLabel.zPosition = 1;
+    self.scoreLabel.position = CGPointMake(0, self.view.frame.size.height / 3);
+    self.score = 0;
+    [self addChild:self.scoreLabel];
 }
 
 #pragma mark - Change Colors
-
-#define HUE_INTERVAL 60
 
 - (void)paletteChange {
     
@@ -303,24 +317,40 @@ static const uint32_t powerupCategory = 2;
     [self addChild:rightLane];
 }
 
+#pragma mark - Handling contact
+
 - (void)handleContactBetweenRunner:(Runner *)runner andWave:(Wave *)wave {
-    NSLog(@"Handling...");
+    
     if (runner.horizontalPosition == wave.colorPosition) {
         NSLog(@"Match!");
     } else {
-        NSLog(@"YOU LOSE");
-        [self._runner removeFromParent];
+        [self lose];
     }
 }
 
+#pragma mark - Losing
+
+- (void)lose {
+    
+    NSLog(@"YOU LOSE");
+}
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    //[self paletteChange];
-    // TESTING
-    //[self spawnWave];
+    // Testing
 }
 
 -(void)update:(CFTimeInterval)currentTime {
-
+    
+//    if (self.gameStart) {
+//        self.startTime = currentTime;
+//        self.gameStart = NO;
+//    }
+//    
+//    self.timePassed = currentTime - self.startTime;
+//    NSLog(@"%f", self.timePassed);
+//    if ((int)(self.timePassed) % 10 == 9) {
+//        [self paletteChange];
+//    }
 }
 
 @end

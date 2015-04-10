@@ -88,7 +88,37 @@
     [runner runAction:repeat withKey:@"running"];
 }
 
+#define BUTTON_ANIMATION_DURATION 0.2f
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    UITouch *touch = [touches anyObject];
+    CGPoint touchPoint = [touch locationInNode:self];
+    
+    if ([self.playButton isEqual:[self nodeAtPoint:touchPoint]]) {
+        SKAction *resize = [SKAction resizeToWidth:95. height:95. duration:BUTTON_ANIMATION_DURATION];
+        [self.playButton runAction:resize];
+    } else {
+        SKAction *resize = [SKAction resizeToWidth:80. height:80. duration:BUTTON_ANIMATION_DURATION];
+        [self.playButton runAction:resize];
+    }
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    
+    UITouch *touch = [touches anyObject];
+    CGPoint touchPoint = [touch locationInNode:self];
+    
+    if ([self.playButton isEqual:[self nodeAtPoint:touchPoint]]) {
+        SKAction *resize = [SKAction resizeToWidth:95. height:95. duration:BUTTON_ANIMATION_DURATION];
+        [self.playButton runAction:resize];
+    } else {
+        SKAction *resize = [SKAction resizeToWidth:80. height:80. duration:BUTTON_ANIMATION_DURATION];
+        [self.playButton runAction:resize];
+    }
+}
+
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    
     UITouch *touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInNode:self];
     

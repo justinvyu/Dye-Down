@@ -10,6 +10,7 @@
 		D010CDE41AD228F100E800CE /* Runner.m in Sources */ = {isa = PBXBuildFile; fileRef = D010CDE31AD228F100E800CE /* Runner.m */; };
 		D010CDE71AD2290800E800CE /* Wave.m in Sources */ = {isa = PBXBuildFile; fileRef = D010CDE61AD2290800E800CE /* Wave.m */; };
 		D02A5D381AD5AAA4003A54C7 /* NSArray+ArrayAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = D02A5D371AD5AAA4003A54C7 /* NSArray+ArrayAdditions.m */; };
+		D02A5D3B1AD74251003A54C7 /* JYConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D02A5D3A1AD74251003A54C7 /* JYConstants.m */; };
 		D032F0C91AC3DA730069D6CC /* leaderboard128x128.png in Resources */ = {isa = PBXBuildFile; fileRef = D032F0B01AC3DA730069D6CC /* leaderboard128x128.png */; };
 		D032F0CA1AC3DA730069D6CC /* leaderboard256x256.png in Resources */ = {isa = PBXBuildFile; fileRef = D032F0B11AC3DA730069D6CC /* leaderboard256x256.png */; };
 		D032F0CB1AC3DA730069D6CC /* leaderboard64x64.png in Resources */ = {isa = PBXBuildFile; fileRef = D032F0B21AC3DA730069D6CC /* leaderboard64x64.png */; };
@@ -85,6 +86,8 @@
 		D010CDE61AD2290800E800CE /* Wave.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Wave.m; sourceTree = "<group>"; };
 		D02A5D361AD5AAA4003A54C7 /* NSArray+ArrayAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+ArrayAdditions.h"; sourceTree = "<group>"; };
 		D02A5D371AD5AAA4003A54C7 /* NSArray+ArrayAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+ArrayAdditions.m"; sourceTree = "<group>"; };
+		D02A5D391AD74251003A54C7 /* JYConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JYConstants.h; sourceTree = "<group>"; };
+		D02A5D3A1AD74251003A54C7 /* JYConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JYConstants.m; sourceTree = "<group>"; };
 		D032F0B01AC3DA730069D6CC /* leaderboard128x128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leaderboard128x128.png; sourceTree = "<group>"; };
 		D032F0B11AC3DA730069D6CC /* leaderboard256x256.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leaderboard256x256.png; sourceTree = "<group>"; };
 		D032F0B21AC3DA730069D6CC /* leaderboard64x64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leaderboard64x64.png; sourceTree = "<group>"; };
@@ -267,6 +270,8 @@
 		D09A1C301AC0A47900C23BA0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D02A5D391AD74251003A54C7 /* JYConstants.h */,
+				D02A5D3A1AD74251003A54C7 /* JYConstants.m */,
 				D09A1C311AC0A47900C23BA0 /* Info.plist */,
 				D09A1C321AC0A47900C23BA0 /* main.m */,
 			);
@@ -516,6 +521,7 @@
 				D0A5E1681AC27ACB004B3FD8 /* Lane.m in Sources */,
 				D010CDE41AD228F100E800CE /* Runner.m in Sources */,
 				D09A1C391AC0A47900C23BA0 /* GameScene.m in Sources */,
+				D02A5D3B1AD74251003A54C7 /* JYConstants.m in Sources */,
 				D09A1C331AC0A47900C23BA0 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

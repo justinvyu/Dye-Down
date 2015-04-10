@@ -28,6 +28,7 @@
 
 
 - (instancetype)initAtHorizontalPosition:(NSUInteger)horizontalPosition {
+    
     self = [super init];
     
     if (self) {
@@ -58,6 +59,7 @@
 }
 
 - (NSUInteger)horizontalPosition {
+    
     if (_horizontalPosition == 3) {
         _horizontalPosition = 1;
     }
@@ -65,6 +67,7 @@
 }
 
 - (void)setHorizontalPosition:(NSUInteger)horizontalPosition {
+    
     if (self.changing) {
         _horizontalPosition = horizontalPosition;
         SKAction *start = [SKAction runBlock:^{
