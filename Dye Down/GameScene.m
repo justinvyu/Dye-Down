@@ -38,6 +38,7 @@
 // Color
 @property (strong, nonatomic) NSArray *colors;
 @property (nonatomic) CGFloat previousHue;
+@property (nonatomic) NSUInteger waveSpeed;
 
 // Utils
 //@property (nonatomic) BOOL gameStart;
@@ -58,7 +59,7 @@
     self.backgroundColor = [UIColor whiteColor];
     self.physicsWorld.contactDelegate = self;
     self._runnerFrames = [[NSMutableArray alloc] init];
-    self.intervalBetweenWaves = 3.0f;
+    self.intervalBetweenWaves = 2.0f;
 //    self.gameStart = YES;
     
     int numberOfFrames = 25;
@@ -82,21 +83,26 @@
     [self setupLanes];
     [self setupRunner];
     [self setupScoreLabel];
+    [self setupPauseButton];
     
     SKAction *wait = [SKAction waitForDuration:self.intervalBetweenWaves];
     SKAction *sequence = [SKAction sequence:@[wait, [SKAction performSelector:@selector(spawnWave) onTarget:self]]];
     SKAction *repeat = [SKAction repeatActionForever:sequence];
     [self runAction:repeat];
     
+    self.scoreLabel.text = @"0";
+
+    
     //[self runAction:[SKAction repeatActionForever:spawn]];
 }
 
 #pragma mark - Properties
 
-- (void)setScore:(NSUInteger)score {
-    
-    _score = score;
-    self.scoreLabel.text = [NSString stringWithFormat:@"%d", (int)score];
+- (NSUInteger)score {
+    if (!_score) {
+        _score = 0;
+    }
+    return _score;
 }
 
 #pragma mark - UISwipeGestureRecognizer
@@ -129,7 +135,7 @@
 
 - (void)spawnWave {
     
-    SKAction *moveDown = [SKAction moveToY:-self.view.frame.size.height-100 duration:TIME];
+    SKAction *moveDown = [SKAction moveToY:-self.view.frame.size.height-100 duration:self.waveSpeed];
     SKAction *remove = [SKAction removeFromParent];
     
     SKAction *sequence = [SKAction sequence:@[moveDown, remove]];
@@ -152,6 +158,7 @@
 #pragma mark - Physics Delegate
 
 - (void)didBeginContact:(SKPhysicsContact *)contact {
+    
     SKNode *nodeA = contact.bodyA.node;
     if ([nodeA isKindOfClass:[Runner class]]) {
         SKNode *nodeB = contact.bodyB.node;
@@ -195,9 +202,22 @@
     self.scoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Market Deco"];
     self.scoreLabel.fontSize = 36.0f;
     self.scoreLabel.zPosition = 1;
+    
     self.scoreLabel.position = CGPointMake(0, self.view.frame.size.height / 3);
-    self.score = 0;
     [self addChild:self.scoreLabel];
+}
+
+- (SKLabelNode *)scoreLabel {
+    if (!_scoreLabel) {
+        _scoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Market Deco"];
+        _scoreLabel.fontSize = 36.0f;
+        _scoreLabel.zPosition = 1;
+        _scoreLabel.text = @"0";
+        
+        _scoreLabel.position = CGPointMake(0, self.view.frame.size.height / 3);
+        [self addChild:_scoreLabel];
+    }
+    return _scoreLabel;
 }
 
 #pragma mark - Change Colors
@@ -347,7 +367,10 @@
 #pragma mark - Matching
 
 - (void)match {
+    
     self.score++;
+    self.scoreLabel.text = [NSString stringWithFormat:@"%d", (int)self.score];
+    NSLog(@"%@", self.scoreLabel.text);
 }
 
 #pragma mark - Losing
