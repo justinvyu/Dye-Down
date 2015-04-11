@@ -26,7 +26,7 @@
 // Nodes
 @property (strong, nonatomic) Runner *_runner;
 @property (strong, nonatomic) SKLabelNode *scoreLabel;
-@property (strong ,nonatomic) SKSpriteNode *pauseButton;
+//@property (strong ,nonatomic) SKSpriteNode *pauseButton;
 @property (strong, nonatomic) Lane *leftLane;
 @property (strong, nonatomic) Lane *middleLane;
 @property (strong, nonatomic) Lane *rightLane;
@@ -38,13 +38,13 @@
 // Color
 @property (strong, nonatomic) NSArray *colors;
 @property (nonatomic) CGFloat previousHue;
-@property (nonatomic) NSUInteger waveSpeed;
 
 // Utils
 //@property (nonatomic) BOOL gameStart;
 //@property (nonatomic) CFTimeInterval startTime;
 //@property (nonatomic) CFTimeInterval timePassed;
 @property (nonatomic) NSUInteger intervalBetweenWaves;
+@property (nonatomic) NSUInteger waveSpeed;
 @property (strong, nonatomic) Wave *currentWave;
 
 @end
@@ -59,7 +59,8 @@
     self.backgroundColor = [UIColor whiteColor];
     self.physicsWorld.contactDelegate = self;
     self._runnerFrames = [[NSMutableArray alloc] init];
-    self.intervalBetweenWaves = 2.0f;
+    self.intervalBetweenWaves = 1.5f;
+    self.waveSpeed = 2.0f;
 //    self.gameStart = YES;
     
     int numberOfFrames = 25;
@@ -83,7 +84,7 @@
     [self setupLanes];
     [self setupRunner];
     [self setupScoreLabel];
-    [self setupPauseButton];
+//    [self setupPauseButton];
     
     SKAction *wait = [SKAction waitForDuration:self.intervalBetweenWaves];
     SKAction *sequence = [SKAction sequence:@[wait, [SKAction performSelector:@selector(spawnWave) onTarget:self]]];
@@ -91,9 +92,6 @@
     [self runAction:repeat];
     
     self.scoreLabel.text = @"0";
-
-    
-    //[self runAction:[SKAction repeatActionForever:spawn]];
 }
 
 #pragma mark - Properties
@@ -105,6 +103,12 @@
     return _score;
 }
 
+- (NSMutableArray *)waves {
+    if (!_waves) {
+        _waves = [[NSMutableArray alloc] init];
+    }
+    return _waves;
+}
 #pragma mark - UISwipeGestureRecognizer
 
 - (void)handleSwipeLeft:(UISwipeGestureRecognizer *)gesture {
@@ -135,10 +139,8 @@
 
 - (void)spawnWave {
     
-    SKAction *moveDown = [SKAction moveToY:-self.view.frame.size.height-100 duration:self.waveSpeed];
-    SKAction *remove = [SKAction removeFromParent];
+    NSLog(@"Spawning");
     
-    SKAction *sequence = [SKAction sequence:@[moveDown, remove]];
     
     CGRect rect = CGRectMake(ANCHOR_HORIZONTAL_OFFSET,
                              -ANCHOR_VERTICAL_OFFSET+50,
@@ -150,9 +152,17 @@
     wave.physicsBody.contactTestBitMask = runnerCategory;
     wave.physicsBody.affectedByGravity = NO;
     
+    SKAction *moveDown = [SKAction moveToY:-self.view.frame.size.height-100 duration:self.waveSpeed];
+    SKAction *remove = [SKAction removeFromParent];
+    SKAction *removeFromArray = [SKAction runBlock:^{
+        [self.waves removeObject:wave];
+    }];
+    SKAction *sequence = [SKAction sequence:@[moveDown, remove, removeFromArray]];
+    
     [self addChild:wave];
     [wave runAction:sequence];
     // Add to waves array
+    [self.waves addObject:wave];
 }
 
 #pragma mark - Physics Delegate
@@ -185,15 +195,16 @@
     [self addChild:self._runner];
 }
 
-#pragma mark - Create pause button
-
-- (void)setupPauseButton {
-    
-    self.pauseButton = [SKSpriteNode spriteNodeWithImageNamed:@"pause"];
-    self.pauseButton.zPosition = 1;
-    self.pauseButton.position = CGPointMake(0, 0);//CGPointMake(ANCHOR_HORIZONTAL_OFFSET, ANCHOR_VERTICAL_OFFSET);
-    [self addChild:self.pauseButton];
-}
+//#pragma mark - Create pause button
+//
+//- (void)setupPauseButton {
+//    
+//    SKTexture *pauseTexture = [SKTexture textureWithImage:[UIImage imageNamed:@"pause.png"]];
+//    self.pauseButton = [SKSpriteNode spriteNodeWithTexture:pauseTexture size:CGSizeMake(30.0f, 30.0f)];
+//    self.pauseButton.zPosition = 1;
+//    self.pauseButton.position = CGPointMake(ANCHOR_HORIZONTAL_OFFSET + self.pauseButton.size.width / 2, -ANCHOR_VERTICAL_OFFSET - self.pauseButton.size.height / 2);
+//    [self addChild:self.pauseButton];
+//}
 
 #pragma mark - Setup score label
 
@@ -207,23 +218,24 @@
     [self addChild:self.scoreLabel];
 }
 
-- (SKLabelNode *)scoreLabel {
-    if (!_scoreLabel) {
-        _scoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Market Deco"];
-        _scoreLabel.fontSize = 36.0f;
-        _scoreLabel.zPosition = 1;
-        _scoreLabel.text = @"0";
-        
-        _scoreLabel.position = CGPointMake(0, self.view.frame.size.height / 3);
-        [self addChild:_scoreLabel];
-    }
-    return _scoreLabel;
-}
+//- (SKLabelNode *)scoreLabel {
+//    if (!_scoreLabel) {
+//        _scoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Market Deco"];
+//        _scoreLabel.fontSize = 36.0f;
+//        _scoreLabel.zPosition = 1;
+//        _scoreLabel.text = @"0";
+//        
+//        _scoreLabel.position = CGPointMake(0, self.view.frame.size.height / 3);
+//        [self addChild:_scoreLabel];
+//    }
+//    return _scoreLabel;
+//}
 
 #pragma mark - Change Colors
 
 - (void)paletteChange {
-    
+    [self.waves makeObjectsPerformSelector:@selector(removeFromParent)];
+    self.waves = nil;
     UIView *whiteView = [[UIView alloc] initWithFrame:self.view.frame];
     [self.view addSubview:whiteView];
     whiteView.backgroundColor = [UIColor whiteColor];
@@ -370,7 +382,6 @@
     
     self.score++;
     self.scoreLabel.text = [NSString stringWithFormat:@"%d", (int)self.score];
-    NSLog(@"%@", self.scoreLabel.text);
 }
 
 #pragma mark - Losing
@@ -382,6 +393,7 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     // Testing
+    //[self paletteChange];
 }
 
 -(void)update:(CFTimeInterval)currentTime {
