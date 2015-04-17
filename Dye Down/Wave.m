@@ -9,7 +9,14 @@
 #import "Wave.h"
 
 #import "SKColor+ColorAdditions.h"
+#import "SKAction+SKActionAdditions.h"
 #import "NSArray+ArrayAdditions.h"
+
+@interface Wave ()
+
+@property (strong, nonatomic) SKColor *innateColor;
+
+@end
 
 @implementation Wave
 
@@ -30,12 +37,20 @@
         self.path = CGPathCreateWithRect(rect, nil);
         
         self.fillColor = [SKColor opaqueWithColor:[self randomColorFromArray:colorArray]];
+        //self.fillColor = [self randomColorFromArray:colorArray];
         self.strokeColor = self.fillColor;
+        self.innateColor = self.fillColor;
         self.lineWidth = 2.0f;
         self.zPosition = 0;
     }
     
     return self;
+}
+
+- (void)flash {
+    SKAction *makeWhite = [SKAction colorFadeFrom:self.innateColor toColor:[SKColor whiteColor] withDuration:0.2f];
+    SKAction *revert = [SKAction colorFadeFrom:[SKColor whiteColor] toColor:self.innateColor withDuration:0.2f];
+    [self runAction:[SKAction repeatAction:[SKAction sequence:@[makeWhite, revert]] count:2]];
 }
 
 @end

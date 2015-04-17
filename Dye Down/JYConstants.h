@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface JYConstants : NSObject
 
@@ -20,4 +21,6 @@ extern uint32_t const runnerCategory;
 extern uint32_t const waveCategory;
 extern uint32_t const powerupCategory;
 
+extern CGFloat const JYButtonSize;
+extern float const JYButtonAnimationDuration;
 @end

@@ -10,9 +10,11 @@
 #import "Lane.h"
 #import "Runner.h"
 #import "Wave.h"
+#import "MenuScene.h"
 
 #import "AppDelegate.h"
 #import "SKColor+ColorAdditions.h"
+#import "SKAction+SKActionAdditions.h"
 
 #import "JYConstants.h"
 
@@ -25,11 +27,19 @@
 
 // Nodes
 @property (strong, nonatomic) Runner *_runner;
-@property (strong, nonatomic) SKLabelNode *scoreLabel;
-//@property (strong ,nonatomic) SKSpriteNode *pauseButton;
 @property (strong, nonatomic) Lane *leftLane;
 @property (strong, nonatomic) Lane *middleLane;
 @property (strong, nonatomic) Lane *rightLane;
+
+// UI Nodes
+@property (strong, nonatomic) NSMutableArray *menuNodeArray;
+@property (strong, nonatomic) SKSpriteNode *playButton;
+@property (strong, nonatomic) SKSpriteNode *leaderboardButton;
+@property (strong, nonatomic) SKSpriteNode *settingsButton;
+@property (strong, nonatomic) SKSpriteNode *rateButton;
+@property (strong, nonatomic) SKLabelNode *titleLabel;
+@property (strong, nonatomic) SKLabelNode *scoreLabel;
+//@property (strong ,nonatomic) SKSpriteNode *pauseButton;
 
 // Gestures
 @property (strong, nonatomic) UISwipeGestureRecognizer *swipeRightGesture;
@@ -56,11 +66,10 @@
 -(void)didMoveToView:(SKView *)view {
     
     self.anchorPoint = CGPointMake(0.5, 0.5);
-    self.backgroundColor = [UIColor whiteColor];
+    self.backgroundColor = [SKColor colorWithWhite:0.9 alpha:0.8f];
     self.physicsWorld.contactDelegate = self;
     self._runnerFrames = [[NSMutableArray alloc] init];
-    self.intervalBetweenWaves = 1.5f;
-    self.waveSpeed = 2.0f;
+    
 //    self.gameStart = YES;
     
     int numberOfFrames = 25;
@@ -71,6 +80,63 @@
         [self._runnerFrames addObject:frameTexture];
     }
     
+    [self setupHomeScreen];
+}
+
+#pragma mark - Home Screen
+
+- (void)setupHomeScreen {
+    
+    [self initializeField];
+    
+    SKTexture *playButtonTexture = [SKTexture textureWithImageNamed:@"play"];
+    self.playButton = [[SKSpriteNode alloc] initWithTexture:playButtonTexture color:[SKColor clearColor] size:CGSizeMake(80., 80.)];
+    [self addChild:self.playButton];
+    [self.menuNodeArray addObject:self.playButton];
+    
+    SKTexture *leaderboardButtonTexture = [SKTexture textureWithImageNamed:@"leaderboard"];
+    self.leaderboardButton = [[SKSpriteNode alloc] initWithTexture:leaderboardButtonTexture color:[SKColor clearColor]
+                                                              size:CGSizeMake(JYButtonSize, JYButtonSize)];
+    self.leaderboardButton.position = CGPointMake(-self.view.frame.size.width/3, -60);
+    [self addChild:self.leaderboardButton];
+    [self.menuNodeArray addObject:self.leaderboardButton];
+
+    SKTexture *settingsButtonTexture = [SKTexture textureWithImageNamed:@"settings"];
+    self.settingsButton = [[SKSpriteNode alloc] initWithTexture:settingsButtonTexture color:[SKColor clearColor]
+                                                           size:CGSizeMake(JYButtonSize, JYButtonSize)];
+    self.settingsButton.position = CGPointMake(0, -100);
+    [self addChild:self.settingsButton];
+    
+    SKTexture *rateButtonTexture = [SKTexture textureWithImageNamed:@"rate"];
+    self.rateButton = [[SKSpriteNode alloc] initWithTexture:rateButtonTexture color:[SKColor clearColor]
+                                                       size:CGSizeMake(JYButtonSize, JYButtonSize)];
+    self.rateButton.position = CGPointMake(self.view.frame.size.width/3, -60);
+    [self addChild:self.rateButton];
+    
+    self.titleLabel = [SKLabelNode labelNodeWithText:@"DYE DOWN"];
+    self.titleLabel.fontColor = [SKColor colorWithWhite:0.92f alpha:1.0f];
+    self.titleLabel.fontName = @"Market Deco";
+    self.titleLabel.fontSize = 50.0;
+    self.titleLabel.position = CGPointMake(0, self.view.frame.size.height/5);
+    [self addChild:self.titleLabel];
+}
+
+#pragma mark - Resetting And Starting the Field/Field Elements
+
+- (void)initializeField {
+    
+    self.intervalBetweenWaves = 1.5f;
+    self.waveSpeed = 2.0f;
+    
+    [self setupScoreLabel];
+    [self setupLanes];
+    [self setupRunner];
+    //    [self setupPauseButton];
+    
+}
+
+- (void)initializeSwipeGestures {
+    
     self.swipeLeftGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeLeft:)];
     [self.swipeLeftGesture setDirection:UISwipeGestureRecognizerDirectionLeft];
     
@@ -80,18 +146,14 @@
     [self.view addGestureRecognizer:self.swipeRightGesture];
     [self.view addGestureRecognizer:self.swipeLeftGesture];
     
-    [self setupScoreLabel];
-    [self setupLanes];
-    [self setupRunner];
-    [self setupScoreLabel];
-//    [self setupPauseButton];
+}
+
+- (void)startSpawningWaves {
     
     SKAction *wait = [SKAction waitForDuration:self.intervalBetweenWaves];
     SKAction *sequence = [SKAction sequence:@[wait, [SKAction performSelector:@selector(spawnWave) onTarget:self]]];
     SKAction *repeat = [SKAction repeatActionForever:sequence];
-    [self runAction:repeat];
-    
-    self.scoreLabel.text = @"0";
+    [self runAction:repeat withKey:@"spawnWaves"];
 }
 
 #pragma mark - Properties
@@ -138,13 +200,10 @@
 #pragma mark - Spawning Waves
 
 - (void)spawnWave {
-    
-    NSLog(@"Spawning");
-    
-    
+
     CGRect rect = CGRectMake(ANCHOR_HORIZONTAL_OFFSET,
                              -ANCHOR_VERTICAL_OFFSET+50,
-                             self.view.frame.size.width, 30);
+                             self.view.frame.size.width, 10);
     Wave *wave = [[Wave alloc] initWithRect:rect andColorArray:self.colors];
     
     wave.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:wave.path];
@@ -234,8 +293,11 @@
 #pragma mark - Change Colors
 
 - (void)paletteChange {
+    
+    // Remove all current waves
     [self.waves makeObjectsPerformSelector:@selector(removeFromParent)];
     self.waves = nil;
+    
     UIView *whiteView = [[UIView alloc] initWithFrame:self.view.frame];
     [self.view addSubview:whiteView];
     whiteView.backgroundColor = [UIColor whiteColor];
@@ -373,6 +435,7 @@
         [self match];
     } else {
         [self lose];
+        [wave flash];
     }
 }
 
@@ -388,12 +451,76 @@
 
 - (void)lose {
     
+    [self.waves makeObjectsPerformSelector:@selector(removeAllActions)];
+    [self removeActionForKey:@"spawnWaves"];
+    [self._runner removeActionForKey:@"run"];
+    [self.view removeGestureRecognizer:self.swipeLeftGesture];
+    [self.view removeGestureRecognizer:self.swipeRightGesture];
+
+    //[self displayReplayOverlay];
     NSLog(@"YOU LOSE");
+    [self setupHomeScreen];
+}
+
+#pragma mark - Replaying
+
+
+#pragma mark - Hiding Menu Overlay
+
+- (void)hideMenuOverlay {
+    
+    SKAction *bounce = [SKAction moveTo:CGPointMake(0, self.titleLabel.position.y - 5) duration:0.3f];
+    SKAction *leave = [SKAction moveTo:CGPointMake(0, 3*self.view.frame.size.height/2) duration:0.5f];
+    SKAction *remove = [SKAction removeFromParent];
+    [self.titleLabel runAction:[SKAction sequence:@[bounce, leave, remove]]];
+    
+    SKAction *fade = [SKAction fadeOutWithDuration:0.4f];
+}
+
+#pragma mark - Button Touches (Home Screen / Replay)
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    UITouch *touch = [touches anyObject];
+    CGPoint touchPoint = [touch locationInNode:self];
+    
+    if (self.playButton) {
+        if ([self.playButton isEqual:[self nodeAtPoint:touchPoint]]) {
+            SKAction *resize = [SKAction resizeToWidth:95. height:95. duration:JYButtonAnimationDuration];
+            [self.playButton runAction:resize];
+        } else {
+            SKAction *resize = [SKAction resizeToWidth:80. height:80. duration:JYButtonAnimationDuration];
+            [self.playButton runAction:resize];
+        }
+    }
+    
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    // Testing
-    //[self paletteChange];
+    
+    UITouch *touch = [touches anyObject];
+    CGPoint touchPoint = [touch locationInNode:self];
+    
+    if (self.playButton) {
+        if ([self.playButton isEqual:[self nodeAtPoint:touchPoint]]) {
+            SKAction *resize = [SKAction resizeToWidth:95. height:95. duration:JYButtonAnimationDuration];
+            [self.playButton runAction:resize];
+        } else {
+            SKAction *resize = [SKAction resizeToWidth:80. height:80. duration:JYButtonAnimationDuration];
+            [self.playButton runAction:resize];
+        }
+    }
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    
+    UITouch *touch = [touches anyObject];
+    CGPoint touchPoint = [touch locationInNode:self];
+    
+    if (self.playButton && self.playButton == [self nodeAtPoint:touchPoint]) {
+        //GameScene *game = [[GameScene alloc] initWithSize:self.view.frame.size];
+        [self hideMenuOverlay];
+        [self startSpawningWaves];
+    }
 }
 
 -(void)update:(CFTimeInterval)currentTime {

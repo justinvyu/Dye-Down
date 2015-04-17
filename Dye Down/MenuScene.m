@@ -9,6 +9,7 @@
 #import "MenuScene.h"
 #import "GameScene.h"
 #import "AppDelegate.h"
+#import "JYConstants.h"
 
 #import "SKColor+ColorAdditions.h"
 
@@ -26,11 +27,9 @@
 
 @implementation MenuScene
 
-#define BUTTON_SIZE 50.
-
 - (void)didMoveToView:(SKView *)view {
     
-    self.backgroundColor = [SKColor randomColor];
+    self.backgroundColor = [SKColor clearColor];
     
     self._runnerFrames = [[NSMutableArray alloc] init];
     
@@ -49,17 +48,20 @@
     [self addChild:self.playButton];
     
     SKTexture *leaderboardButtonTexture = [SKTexture textureWithImageNamed:@"leaderboard"];
-    self.leaderboardButton = [[SKSpriteNode alloc] initWithTexture:leaderboardButtonTexture color:[SKColor clearColor] size:CGSizeMake(BUTTON_SIZE, BUTTON_SIZE)];
+    self.leaderboardButton = [[SKSpriteNode alloc] initWithTexture:leaderboardButtonTexture color:[SKColor clearColor]
+                                                              size:CGSizeMake(JYButtonSize, JYButtonSize)];
     self.leaderboardButton.position = CGPointMake(-80, -80);
     [self addChild:self.leaderboardButton];
     
     SKTexture *settingsButtonTexture = [SKTexture textureWithImageNamed:@"settings"];
-    self.settingsButton = [[SKSpriteNode alloc] initWithTexture:settingsButtonTexture color:[SKColor clearColor] size:CGSizeMake(BUTTON_SIZE, BUTTON_SIZE)];
+    self.settingsButton = [[SKSpriteNode alloc] initWithTexture:settingsButtonTexture color:[SKColor clearColor]
+                                                           size:CGSizeMake(JYButtonSize, JYButtonSize)];
     self.settingsButton.position = CGPointMake(0, -100);
     [self addChild:self.settingsButton];
     
     SKTexture *rateButtonTexture = [SKTexture textureWithImageNamed:@"rate"];
-    self.rateButton = [[SKSpriteNode alloc] initWithTexture:rateButtonTexture color:[SKColor clearColor] size:CGSizeMake(BUTTON_SIZE, BUTTON_SIZE)];
+    self.rateButton = [[SKSpriteNode alloc] initWithTexture:rateButtonTexture color:[SKColor clearColor]
+                                                       size:CGSizeMake(JYButtonSize, JYButtonSize)];
     self.rateButton.position = CGPointMake(80, -80);
     [self addChild:self.rateButton];
     

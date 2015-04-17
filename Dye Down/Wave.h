@@ -14,5 +14,6 @@
 @property (nonatomic) NSUInteger colorPosition;
 
 - (instancetype)initWithRect:(CGRect)rect andColorArray:(NSArray *)colorArray;
+- (void)flash;
 
 @end

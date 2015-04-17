@@ -50,7 +50,7 @@
         SKAction *runningAnimation = [SKAction animateWithTextures:self.animationFrames timePerFrame:0.03f resize:YES restore:NO];
         SKAction *repeat = [SKAction repeatActionForever:runningAnimation];
         
-        [self runAction:repeat withKey:@"running"];
+        [self runAction:repeat withKey:@"run"];
 
     }
     

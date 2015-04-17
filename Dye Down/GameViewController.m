@@ -42,8 +42,8 @@
     skView.showsNodeCount = YES;
     
     skView.backgroundColor = [SKColor whiteColor];
-    MenuScene *menu = [[MenuScene alloc] initWithSize:[UIScreen mainScreen].bounds.size];
-    [skView presentScene:menu];
+    GameScene *game = [[GameScene alloc] initWithSize:[UIScreen mainScreen].bounds.size];
+    [skView presentScene:game];
 }
 
 - (void)didReceiveMemoryWarning

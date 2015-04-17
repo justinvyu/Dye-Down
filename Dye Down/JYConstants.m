@@ -14,4 +14,6 @@ uint32_t const runnerCategory = 0;
 uint32_t const waveCategory = 1;
 uint32_t const powerupCategory = 2;
 
+CGFloat const JYButtonSize = 55.0f;
+float const JYButtonAnimationDuration = 0.2f;
 @end
