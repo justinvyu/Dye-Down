@@ -183,6 +183,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D02EDF331AE0C9660061F3EF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		D032F0AF1AC3DA730069D6CC /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -270,6 +277,7 @@
 				D0A5E16D1AC27C62004B3FD8 /* Categories */,
 				D0A5E1611AC25ECF004B3FD8 /* Resources */,
 				D0A5E15F1AC219EC004B3FD8 /* View Controller */,
+				D02EDF331AE0C9660061F3EF /* Views */,
 				D0A5E15E1AC219E1004B3FD8 /* Scene */,
 				D0A5E1691AC27ACE004B3FD8 /* Custom Nodes */,
 				D0A5E15D1AC219C8004B3FD8 /* Delegate */,
@@ -284,6 +292,8 @@
 			children = (
 				D02A5D391AD74251003A54C7 /* JYConstants.h */,
 				D02A5D3A1AD74251003A54C7 /* JYConstants.m */,
+				D0A5E15A1AC219C4004B3FD8 /* MenuScene.h */,
+				D0A5E15B1AC219C4004B3FD8 /* MenuScene.m */,
 				D09A1C311AC0A47900C23BA0 /* Info.plist */,
 				D09A1C321AC0A47900C23BA0 /* main.m */,
 			);
@@ -319,8 +329,6 @@
 		D0A5E15E1AC219E1004B3FD8 /* Scene */ = {
 			isa = PBXGroup;
 			children = (
-				D0A5E15A1AC219C4004B3FD8 /* MenuScene.h */,
-				D0A5E15B1AC219C4004B3FD8 /* MenuScene.m */,
 				D09A1C371AC0A47900C23BA0 /* GameScene.h */,
 				D09A1C381AC0A47900C23BA0 /* GameScene.m */,
 			);
