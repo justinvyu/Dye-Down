@@ -14,4 +14,6 @@
 
 - (instancetype)initAtHorizontalPosition:(NSUInteger)horizontalPosition;
 
+- (void)moveToHorizontalPosition:(NSUInteger)horizontalPosition;
+
 @end

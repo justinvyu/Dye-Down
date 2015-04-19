@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>D6316D30-469A-4703-B89C-7C8FC02410C1</string>
 	<key>IDESourceControlProjectName</key>
-	<string>Dye Down</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>0D3473F4554DA8ECB96A354D4F58D7E15EA4F349</key>
 		<string>https://github.com/justinvyu/Dye-Down</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Dye Down.xcodeproj</string>
+	<string>Dye Down.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>0D3473F4554DA8ECB96A354D4F58D7E15EA4F349</key>

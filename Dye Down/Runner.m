@@ -22,7 +22,7 @@
 
 @synthesize horizontalPosition = _horizontalPosition;
 
-#define ANIMATION_DURATION 0.2f
+#define ANIMATION_DURATION 0.16f
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define VERTICAL_POSITION -self.screenHeight / 2 + self.size.height
 
@@ -65,10 +65,8 @@
     return _horizontalPosition;
 }
 
-- (void)setHorizontalPosition:(NSUInteger)horizontalPosition {
-    
+- (void)moveToHorizontalPosition:(NSUInteger)horizontalPosition {
     if (self.changing) {
-        _horizontalPosition = horizontalPosition;
         SKAction *start = [SKAction runBlock:^{
             self.changing = NO;
         }];
@@ -100,7 +98,44 @@
             }
         }
     }
-    
 }
+
+//- (void)setHorizontalPosition:(NSUInteger)horizontalPosition {
+//    
+//    if (self.changing) {
+//        _horizontalPosition = horizontalPosition;
+//        SKAction *start = [SKAction runBlock:^{
+//            self.changing = NO;
+//        }];
+//        SKAction *end = [SKAction runBlock:^{
+//            self.changing = YES;
+//        }];
+//        switch (horizontalPosition) {
+//            {case 0:
+//                NSLog(@"");
+//                SKAction *moveRunner = [SKAction moveTo:CGPointMake(-SCREEN_WIDTH/3, VERTICAL_POSITION) duration:ANIMATION_DURATION];
+//                SKAction *sequence = [SKAction sequence:@[start, moveRunner, end]];
+//                [self runAction:sequence];
+//                break;
+//            }
+//            {case 1:
+//                NSLog(@"");
+//                SKAction *moveRunner = [SKAction moveTo:CGPointMake(0, VERTICAL_POSITION) duration:ANIMATION_DURATION];
+//                //self.position = CGPointMake(0, VERTICAL_POSITION);
+//                SKAction *sequence = [SKAction sequence:@[start, moveRunner, end]];
+//                [self runAction:sequence];
+//                break;
+//            }
+//            {case 2:
+//                NSLog(@"");
+//                SKAction *moveRunner = [SKAction moveTo:CGPointMake(SCREEN_WIDTH/3, VERTICAL_POSITION) duration:ANIMATION_DURATION];
+//                SKAction *sequence = [SKAction sequence:@[start, moveRunner, end]];
+//                [self runAction:sequence];
+//                break;
+//            }
+//        }
+//    }
+//    
+//}
 
 @end

@@ -67,7 +67,7 @@
 -(void)didMoveToView:(SKView *)view {
     
     self.anchorPoint = CGPointMake(0.5, 0.5);
-    self.backgroundColor = [SKColor colorWithWhite:0.9 alpha:0.8f];
+    self.backgroundColor = [SKColor colorWithWhite:1 alpha:0.8f];
     self.physicsWorld.contactDelegate = self;
     self._runnerFrames = [[NSMutableArray alloc] init];
     
@@ -169,6 +169,7 @@
     
     [self.scoreLabel removeFromParent];
     self.scoreLabel = nil;
+    self.score = 0;
     // Powerups
 }
 
@@ -180,6 +181,8 @@
     [self setupRunner];
     [self setupScoreLabel];
     [self setupLanes];
+    
+    [self._runner moveToHorizontalPosition:1];
     //    [self setupPauseButton];
     
 }
@@ -265,6 +268,7 @@
     self.scoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Market Deco"];
     self.scoreLabel.fontSize = 36.0f;
     self.scoreLabel.zPosition = 1;
+    self.scoreLabel.text = @"0";
     
     self.scoreLabel.position = CGPointMake(0, self.view.frame.size.height / 3);
     [self addChild:self.scoreLabel];
@@ -323,26 +327,27 @@
 
 #pragma mark - Game Elements
 
-- (void)moveToLeftLane {
-    
-    self._runner.horizontalPosition = 0;
-}
-- (void)moveToMiddleLane {
-    
-    self._runner.horizontalPosition = 1;
-}
-- (void)moveToRightLane {
-    
-    self._runner.horizontalPosition = 2;
-}
+//- (void)moveToLeftLane {
+//    
+//    self._runner.horizontalPosition = 0;
+//}
+//- (void)moveToMiddleLane {
+//    
+//    self._runner.horizontalPosition = 1;
+//}
+//- (void)moveToRightLane {
+//    
+//    self._runner.horizontalPosition = 2;
+//}
 
 - (void)startSpawningWaves {
     
+    self.started = YES;
     SKAction *wait = [SKAction waitForDuration:self.intervalBetweenWaves];
     SKAction *sequence = [SKAction sequence:@[wait, [SKAction performSelector:@selector(spawnWave) onTarget:self]]];
     SKAction *repeat = [SKAction repeatActionForever:sequence];
     [self runAction:repeat withKey:@"spawnWaves"];
-    self.started = YES;
+    [self._runner moveToHorizontalPosition:1];
 }
 
 - (void)spawnWave {
@@ -352,7 +357,8 @@
                              self.view.frame.size.width, 10);
     Wave *wave = [[Wave alloc] initWithRect:rect andColorArray:self.colors];
     
-    wave.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:wave.path];
+    CGPathRef bodyPath = CGPathCreateWithRect(CGRectInset(rect, 0, -5), nil);
+    wave.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:bodyPath];
     wave.physicsBody.categoryBitMask = waveCategory;
     wave.physicsBody.contactTestBitMask = runnerCategory;
     wave.physicsBody.affectedByGravity = NO;
@@ -369,7 +375,6 @@
     // Add to waves array
     [self.waves addObject:wave];
 }
-
 
 - (void)setupRunner {
     
@@ -498,9 +503,11 @@
 - (void)handleContactBetweenRunner:(Runner *)runner andWave:(Wave *)wave {
 
     if (runner.horizontalPosition == wave.colorPosition) {
-        if (arc4random_uniform(5) == 1) {
-            [self paletteChange];
-        }
+
+//        if (arc4random_uniform(5) == 1) {
+//            [self paletteChange];
+//        }
+
         self.score++;
         self.scoreLabel.text = [NSString stringWithFormat:@"%d", (int)self.score];
     } else {
@@ -556,6 +563,22 @@
             [self.playButton runAction:resize];
         }
     }
+    
+    if (self.started) {
+        if ([self.leftLane isEqualToNode:[self nodeAtPoint:touchPoint]]) {
+            [self._runner moveToHorizontalPosition:0];
+            self._runner.horizontalPosition = 0;
+            NSLog(@"Left");
+        } else if ([self.middleLane isEqualToNode:[self nodeAtPoint:touchPoint]]) {
+            [self._runner moveToHorizontalPosition:1];
+            self._runner.horizontalPosition = 1;
+            NSLog(@"Middle");
+        } else if ([self.rightLane isEqualToNode:[self nodeAtPoint:touchPoint]]) {
+            [self._runner moveToHorizontalPosition:2];
+            self._runner.horizontalPosition = 2;
+            NSLog(@"Right");
+        }
+    }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -569,16 +592,6 @@
         [self hideMenuOverlay];
 //        [self initializeSwipeGestures];
         [self startSpawningWaves];
-    }
-    
-    if (self.started) {
-        if ([self.leftLane isEqualToNode:[self nodeAtPoint:touchPoint]]) {
-            [self moveToLeftLane];
-        } else if ([self.middleLane isEqualToNode:[self nodeAtPoint:touchPoint]]) {
-            [self moveToMiddleLane];
-        } else if ([self.rightLane isEqualToNode:[self nodeAtPoint:touchPoint]]) {
-            [self moveToRightLane];
-        }
     }
 }
 
