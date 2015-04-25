@@ -20,6 +20,9 @@
         self.path = CGPathCreateWithRect(rect, nil);
     }
     
+    self.zPosition = -1;
+    self.lineWidth = 0.2f;
+    self.strokeColor = [SKColor whiteColor];
     return self;
 }
 

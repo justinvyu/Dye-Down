@@ -11,7 +11,7 @@
 @interface Runner ()
 
 @property (strong, nonatomic) NSMutableArray *animationFrames;
-@property (nonatomic) BOOL changing;
+//@property (nonatomic) BOOL changing;
 
 @property (nonatomic) float screenHeight;
 @property (nonatomic) BOOL firstTime;
@@ -31,7 +31,7 @@
     self = [super init];
     
     if (self) {
-        self.changing = YES;
+//        self.changing = YES;
         self.horizontalPosition = 3; // workaround
         //self.changing = YES;
         self.animationFrames = [[NSMutableArray alloc] init];
@@ -66,38 +66,42 @@
 }
 
 - (void)moveToHorizontalPosition:(NSUInteger)horizontalPosition {
-    if (self.changing) {
-        SKAction *start = [SKAction runBlock:^{
-            self.changing = NO;
-        }];
-        SKAction *end = [SKAction runBlock:^{
-            self.changing = YES;
-        }];
+//    if (self.changing) {
+//        SKAction *start = [SKAction runBlock:^{
+//            self.changing = NO;
+//        }];
+//        SKAction *end = [SKAction runBlock:^{
+//            self.changing = YES;
+//        }];
+
         switch (horizontalPosition) {
             {case 0:
                 NSLog(@"");
                 SKAction *moveRunner = [SKAction moveTo:CGPointMake(-SCREEN_WIDTH/3, VERTICAL_POSITION) duration:ANIMATION_DURATION];
-                SKAction *sequence = [SKAction sequence:@[start, moveRunner, end]];
-                [self runAction:sequence];
+                [self runAction:moveRunner completion:^{
+                    self.horizontalPosition = horizontalPosition;
+                }];
                 break;
             }
             {case 1:
                 NSLog(@"");
                 SKAction *moveRunner = [SKAction moveTo:CGPointMake(0, VERTICAL_POSITION) duration:ANIMATION_DURATION];
                 //self.position = CGPointMake(0, VERTICAL_POSITION);
-                SKAction *sequence = [SKAction sequence:@[start, moveRunner, end]];
-                [self runAction:sequence];
+                [self runAction:moveRunner completion:^{
+                    self.horizontalPosition = horizontalPosition;
+                }];
                 break;
             }
             {case 2:
                 NSLog(@"");
                 SKAction *moveRunner = [SKAction moveTo:CGPointMake(SCREEN_WIDTH/3, VERTICAL_POSITION) duration:ANIMATION_DURATION];
-                SKAction *sequence = [SKAction sequence:@[start, moveRunner, end]];
-                [self runAction:sequence];
+                [self runAction:moveRunner completion:^{
+                    self.horizontalPosition = horizontalPosition;
+                }];
                 break;
             }
         }
-    }
+//    }
 }
 
 //- (void)setHorizontalPosition:(NSUInteger)horizontalPosition {

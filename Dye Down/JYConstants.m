@@ -15,5 +15,9 @@ uint32_t const waveCategory = 1;
 uint32_t const powerupCategory = 2;
 
 CGFloat const JYButtonSize = 55.0f;
-float const JYButtonAnimationDuration = 0.2f;
+float const JYButtonAnimationDuration = 0.1f;
+
+int const JYBaseWaveAnimationDuration = 2.5f;
+int const JYBaseWaveSpawnWaitDuration = 1.5f;
+
 @end

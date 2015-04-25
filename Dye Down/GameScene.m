@@ -54,8 +54,8 @@
 //@property (nonatomic) CFTimeInterval startTime;
 //@property (nonatomic) CFTimeInterval timePassed;
 @property (nonatomic) BOOL started;
-@property (nonatomic) NSUInteger intervalBetweenWaves;
-@property (nonatomic) NSUInteger waveSpeed;
+@property (nonatomic) float intervalBetweenWaves;
+@property (nonatomic) float waveAnimationDuration;
 @property (strong, nonatomic) Wave *currentWave;
 
 @end
@@ -67,7 +67,7 @@
 -(void)didMoveToView:(SKView *)view {
     
     self.anchorPoint = CGPointMake(0.5, 0.5);
-    self.backgroundColor = [SKColor colorWithWhite:1 alpha:0.8f];
+    self.backgroundColor = [SKColor clearColor];//[SKColor colorWithWhite:1 alpha:0.8f];
     self.physicsWorld.contactDelegate = self;
     self._runnerFrames = [[NSMutableArray alloc] init];
     
@@ -166,20 +166,19 @@
     
     [self.menuNodeArray makeObjectsPerformSelector:@selector(removeFromParent)];
     self.menuNodeArray = nil;
-    
-    [self.scoreLabel removeFromParent];
-    self.scoreLabel = nil;
     self.score = 0;
+
+    [self.scoreLabel removeFromParent];
+    self.scoreLabel.text = @"0";
     // Powerups
 }
 
 - (void)initializeGameSession {
     
-    self.intervalBetweenWaves = 1.0;
-    self.waveSpeed = 2.0;
+    self.intervalBetweenWaves = 0.8f;
+    self.waveAnimationDuration = 1.8f;
     
     [self setupRunner];
-    [self setupScoreLabel];
     [self setupLanes];
     
     [self._runner moveToHorizontalPosition:1];
@@ -205,10 +204,6 @@
                                                             self.view.frame.size.width/3,
                                                             self.view.frame.size.height)
                             atHorizontalPosition:2];
-    
-    leftLane.zPosition = -1;
-    middleLane.zPosition = -1;
-    rightLane.zPosition = -1;
     
     self.leftLane = leftLane;
     self.middleLane = middleLane;
@@ -327,21 +322,23 @@
 
 #pragma mark - Game Elements
 
-//- (void)moveToLeftLane {
-//    
-//    self._runner.horizontalPosition = 0;
-//}
-//- (void)moveToMiddleLane {
-//    
-//    self._runner.horizontalPosition = 1;
-//}
-//- (void)moveToRightLane {
-//    
-//    self._runner.horizontalPosition = 2;
-//}
+- (void)moveToLeftLane {
+    
+    [self._runner moveToHorizontalPosition:0];
+}
+- (void)moveToMiddleLane {
+    
+    [self._runner moveToHorizontalPosition:1];
+}
+- (void)moveToRightLane {
+    
+    [self._runner moveToHorizontalPosition:2];
+}
 
 - (void)startSpawningWaves {
     
+    [self setupScoreLabel];
+
     self.started = YES;
     SKAction *wait = [SKAction waitForDuration:self.intervalBetweenWaves];
     SKAction *sequence = [SKAction sequence:@[wait, [SKAction performSelector:@selector(spawnWave) onTarget:self]]];
@@ -350,20 +347,25 @@
     [self._runner moveToHorizontalPosition:1];
 }
 
+
 - (void)spawnWave {
     
+    NSLog(@"Interval: %d  Spawning", (int)self.intervalBetweenWaves);
     CGRect rect = CGRectMake(ANCHOR_HORIZONTAL_OFFSET,
                              -ANCHOR_VERTICAL_OFFSET+50,
                              self.view.frame.size.width, 10);
     Wave *wave = [[Wave alloc] initWithRect:rect andColorArray:self.colors];
     
     CGPathRef bodyPath = CGPathCreateWithRect(CGRectInset(rect, 0, -5), nil);
+    /*
+    wave.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:bodyPath];
+     */
     wave.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:bodyPath];
     wave.physicsBody.categoryBitMask = waveCategory;
     wave.physicsBody.contactTestBitMask = runnerCategory;
     wave.physicsBody.affectedByGravity = NO;
     
-    SKAction *moveDown = [SKAction moveToY:-self.view.frame.size.height-100 duration:self.waveSpeed];
+    SKAction *moveDown = [SKAction moveToY:-self.view.frame.size.height-100 duration:self.waveAnimationDuration];
     SKAction *remove = [SKAction removeFromParent];
     SKAction *removeFromArray = [SKAction runBlock:^{
         [self.waves removeObject:wave];
@@ -371,9 +373,11 @@
     SKAction *sequence = [SKAction sequence:@[moveDown, remove, removeFromArray]];
     
     [self addChild:wave];
-    [wave runAction:sequence];
+    //[wave runAction:sequence];
+    
     // Add to waves array
     [self.waves addObject:wave];
+    [wave runAction:sequence];
 }
 
 - (void)setupRunner {
@@ -513,7 +517,7 @@
     } else {
         // Lose
         [wave flash];
-
+        self.started = NO;
         [self.waves makeObjectsPerformSelector:@selector(removeAllActions)];
 
         [self removeActionForKey:@"spawnWaves"];
@@ -546,16 +550,82 @@
             [self.playButton runAction:resize];
         }
     }
-    
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    
+    //NSLog(@"Touched");
     UITouch *touch = [touches anyObject];
-    CGPoint touchPoint = [touch locationInNode:self];
+    CGPoint touchPoint = [touch locationInView:self.view];
+    SKNode *touchNode = [self nodeAtPoint:touchPoint];
+    //NSLog(@"%f, %f", touchPoint.x, touchPoint.y);
+//    NSArray *touchArray = [touches allObjects];
+//    NSMutableArray *nodes = [[NSMutableArray alloc] init];
+//    
+//    for (int i = 0; i < [touchArray count]; i++) {
+//        [nodes addObject:[self nodeAtPoint:[(UITouch *)touchArray[i] locationInNode:self]]];
+//    }
+//    
+//     if ([nodes containsObject:self.leftLane]) {
+//         NSLog(@"Left");
+//     } else if ([nodes containsObject:self.middleLane]) {
+//         NSLog(@"Middle");
+//     } else if ([nodes containsObject:self.rightLane]) {
+//         NSLog(@"Right");
+//     }
+    
+    if (self.started) {
+        
+        if (touchPoint.x >= 0 && touchPoint.x < LANE_WIDTH && touchPoint.y >= 0 && touchPoint.y <= HEIGHT(self.view)) {
+            
+            if (self._runner.horizontalPosition != 0) {
+                [self._runner moveToHorizontalPosition:0];
+                self._runner.horizontalPosition = 0;
+                NSLog(@"Left");
+            }
+        } else if (touchPoint.x > LANE_WIDTH && touchPoint.x < 2*LANE_WIDTH && touchPoint.y >= 0 && touchPoint.y <= HEIGHT(self.view)) {
+            
+            if (self._runner.horizontalPosition != 1) {
+                [self._runner moveToHorizontalPosition:1];
+                self._runner.horizontalPosition = 1;
+                NSLog(@"Middle");
+            }
+        } else if (touchPoint.x > 2*LANE_WIDTH && touchPoint.x < WIDTH(self.view) && touchPoint.y >= 0 && touchPoint.y <= HEIGHT(self.view)) {
+            
+            if (self._runner.horizontalPosition != 2) {
+                [self._runner moveToHorizontalPosition:2];
+                self._runner.horizontalPosition = 2;
+                NSLog(@"Right");
+            }
+        }
+        
+        
+//        if ([touchNode isKindOfClass:[Wave class]]) {
+//            NSLog(@"wave");
+//        }
+//        if ([self.leftLane isEqual:touchNode]) {
+//            if (self._runner.horizontalPosition != 0) {
+//                [self._runner moveToHorizontalPosition:0];
+//                self._runner.horizontalPosition = 0;
+//                NSLog(@"Left");
+//            }
+//        } else if ([self.middleLane isEqual:touchNode]) {
+//            if (self._runner.horizontalPosition != 1) {
+//                [self._runner moveToHorizontalPosition:1];
+//                self._runner.horizontalPosition = 1;
+//                NSLog(@"Middle");
+//            }
+//        } else if ([self.rightLane isEqual:touchNode]) {
+//            if (self._runner.horizontalPosition != 2) {
+//                [self._runner moveToHorizontalPosition:2];
+//                self._runner.horizontalPosition = 2;
+//                NSLog(@"Right");
+//            }
+//            
+//        }
+    }
     
     if (self.playButton) {
-        if ([self.playButton isEqual:[self nodeAtPoint:touchPoint]]) {
+        if ([self.playButton isEqual:touchNode]) { //[nodes containsObject:self.playButton]) {
             SKAction *resize = [SKAction resizeToWidth:95. height:95. duration:JYButtonAnimationDuration];
             [self.playButton runAction:resize];
         } else {
@@ -564,21 +634,7 @@
         }
     }
     
-    if (self.started) {
-        if ([self.leftLane isEqualToNode:[self nodeAtPoint:touchPoint]]) {
-            [self._runner moveToHorizontalPosition:0];
-            self._runner.horizontalPosition = 0;
-            NSLog(@"Left");
-        } else if ([self.middleLane isEqualToNode:[self nodeAtPoint:touchPoint]]) {
-            [self._runner moveToHorizontalPosition:1];
-            self._runner.horizontalPosition = 1;
-            NSLog(@"Middle");
-        } else if ([self.rightLane isEqualToNode:[self nodeAtPoint:touchPoint]]) {
-            [self._runner moveToHorizontalPosition:2];
-            self._runner.horizontalPosition = 2;
-            NSLog(@"Right");
-        }
-    }
+    
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
