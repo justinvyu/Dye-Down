@@ -21,8 +21,8 @@
     [super viewDidLoad];
     
     SKView * skView = (SKView *)self.view;
-    skView.showsFPS = YES;
-    skView.showsNodeCount = YES;
+//    skView.showsFPS = YES;
+//    skView.showsNodeCount = YES;
     
     skView.backgroundColor = [SKColor whiteColor];
     GameScene *game = [[GameScene alloc] initWithSize:[UIScreen mainScreen].bounds.size];

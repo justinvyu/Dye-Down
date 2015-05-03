@@ -47,6 +47,7 @@
 		D0A5E1651AC268D3004B3FD8 /* Market_Deco.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D0A5E1641AC268D3004B3FD8 /* Market_Deco.ttf */; };
 		D0A5E1681AC27ACB004B3FD8 /* Lane.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A5E1671AC27ACB004B3FD8 /* Lane.m */; };
 		D0A5E16C1AC27C5A004B3FD8 /* SKColor+ColorAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A5E16B1AC27C5A004B3FD8 /* SKColor+ColorAdditions.m */; };
+		D0B707ED1AF5B90C002CC539 /* rate.png in Resources */ = {isa = PBXBuildFile; fileRef = D0B707EC1AF5B90C002CC539 /* rate.png */; };
 		D0E6C33B1AD0FAAA00C7AFAA /* guy_1.png in Resources */ = {isa = PBXBuildFile; fileRef = D0E6C3221AD0FAAA00C7AFAA /* guy_1.png */; };
 		D0E6C33C1AD0FAAA00C7AFAA /* guy_2.png in Resources */ = {isa = PBXBuildFile; fileRef = D0E6C3231AD0FAAA00C7AFAA /* guy_2.png */; };
 		D0E6C33D1AD0FAAA00C7AFAA /* guy_3.png in Resources */ = {isa = PBXBuildFile; fileRef = D0E6C3241AD0FAAA00C7AFAA /* guy_3.png */; };
@@ -141,6 +142,7 @@
 		D0A5E1671AC27ACB004B3FD8 /* Lane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Lane.m; sourceTree = "<group>"; };
 		D0A5E16A1AC27C5A004B3FD8 /* SKColor+ColorAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SKColor+ColorAdditions.h"; sourceTree = "<group>"; };
 		D0A5E16B1AC27C5A004B3FD8 /* SKColor+ColorAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SKColor+ColorAdditions.m"; sourceTree = "<group>"; };
+		D0B707EC1AF5B90C002CC539 /* rate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rate.png; sourceTree = "<group>"; };
 		D0E6C3221AD0FAAA00C7AFAA /* guy_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = guy_1.png; sourceTree = "<group>"; };
 		D0E6C3231AD0FAAA00C7AFAA /* guy_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = guy_2.png; sourceTree = "<group>"; };
 		D0E6C3241AD0FAAA00C7AFAA /* guy_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = guy_3.png; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 				D032F0B11AC3DA730069D6CC /* leaderboard256x256.png */,
 				D032F0B21AC3DA730069D6CC /* leaderboard64x64.png */,
 				D032F0B31AC3DA730069D6CC /* leaderboard72x72.png */,
+				D0B707EC1AF5B90C002CC539 /* rate.png */,
 				D032F0B41AC3DA730069D6CC /* play128x128.png */,
 				D032F0B51AC3DA730069D6CC /* play256x256.png */,
 				D032F0B61AC3DA730069D6CC /* play72x72.png */,
@@ -505,6 +508,7 @@
 				D032F0D41AC3DA730069D6CC /* rate72x72.png in Resources */,
 				D0E6C3501AD0FAAA00C7AFAA /* guy_22.png in Resources */,
 				D032F0D11AC3DA730069D6CC /* rate128x128.png in Resources */,
+				D0B707ED1AF5B90C002CC539 /* rate.png in Resources */,
 				D0E6C34D1AD0FAAA00C7AFAA /* guy_19.png in Resources */,
 				D032F0DF1AC3DA730069D6CC /* settings72x72.png in Resources */,
 				D09A1C431AC0A47900C23BA0 /* Images.xcassets in Resources */,

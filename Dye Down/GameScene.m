@@ -67,7 +67,7 @@
 -(void)didMoveToView:(SKView *)view {
     
     self.anchorPoint = CGPointMake(0.5, 0.5);
-    self.backgroundColor = [SKColor clearColor];//[SKColor colorWithWhite:1 alpha:0.8f];
+    self.backgroundColor = [SKColor whiteColor];//[SKColor colorWithWhite:1 alpha:0.8f];
     self.physicsWorld.contactDelegate = self;
     self._runnerFrames = [[NSMutableArray alloc] init];
     
@@ -101,10 +101,10 @@
     self.leaderboardButton.position = CGPointMake(-self.view.frame.size.width/3, -60);
     [self.menuNodeArray addObject:self.leaderboardButton];
 
-    SKTexture *settingsButtonTexture = [SKTexture textureWithImageNamed:@"settings"];
+    SKTexture *settingsButtonTexture = [SKTexture textureWithImageNamed:@"twitter"];
     self.settingsButton = [[SKSpriteNode alloc] initWithTexture:settingsButtonTexture color:[SKColor clearColor]
                                                            size:CGSizeMake(JYButtonSize, JYButtonSize)];
-    self.settingsButton.position = CGPointMake(0, -100);
+    self.settingsButton.position = CGPointMake(0, -1.5 * JYButtonSize);
     [self.menuNodeArray addObject:self.settingsButton];
     
     SKTexture *rateButtonTexture = [SKTexture textureWithImageNamed:@"rate"];
@@ -127,16 +127,16 @@
     [self addChild:self.rateButton];
 
     self.titleLabel = [SKLabelNode labelNodeWithText:@"DYE DOWN"];
-    self.titleLabel.fontColor = [SKColor colorWithWhite:0.92f alpha:1.0f];
+    self.titleLabel.fontColor = [SKColor colorWithWhite:0.98f alpha:1.0f];
     self.titleLabel.fontName = @"Market Deco";
     self.titleLabel.fontSize = 50.0;
     self.titleLabel.position = CGPointMake(0, 3*self.view.frame.size.height/2);
 //    self.titleLabel.position = CGPointMake(0, self.view.frame.size.height/5);
     [self addChild:self.titleLabel];
     
-    SKAction *bounce1 = [SKAction moveTo:CGPointMake(0, self.view.frame.size.height/5 + 10) duration:0.3f];
-    SKAction *bounce2 = [SKAction moveTo:CGPointMake(0, self.view.frame.size.height/5) duration:0.3f];
-    SKAction *enter = [SKAction moveTo:CGPointMake(0, self.view.frame.size.height/5) duration:0.5f];
+    SKAction *bounce1 = [SKAction moveTo:CGPointMake(0, JYButtonSize + 50) duration:0.3f];
+    SKAction *bounce2 = [SKAction moveTo:CGPointMake(0, JYButtonSize + 30) duration:0.3f];
+    SKAction *enter = [SKAction moveTo:CGPointMake(0, JYButtonSize + 30) duration:0.5f];
     [self.titleLabel runAction:[SKAction sequence:@[enter, bounce1, bounce2]]];
 }
 
