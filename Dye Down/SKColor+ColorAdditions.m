@@ -13,7 +13,7 @@
 + (SKColor *)randomColor {
     
     CGFloat hue = ( arc4random() % 256 / 256.0 );  //  0.0 to 1.0
-    CGFloat saturation = 0.8f;/*( arc4random() % 128 / 256.0 ) + 0.5*/;  //  0.5 to 1.0, away from white
+    CGFloat saturation = 0.7f;/*( arc4random() % 128 / 256.0 ) + 0.5*/;  //  0.5 to 1.0, away from white
     CGFloat brightness = 0.8f;// ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from black
     UIColor *color = [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:0.7f];
     return color;

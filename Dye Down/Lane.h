@@ -10,9 +10,8 @@
 
 @interface Lane : SKShapeNode
 
-@property (strong, nonatomic) SKColor *color;
 @property (nonatomic) NSUInteger horizontalPosition; // 0 = left, 1 = center, 2 = right
 
-- (instancetype)initWithRect:(CGRect)rect atHorizontalPosition:(NSUInteger)horizontalPosition;
+- (instancetype)initWithRect:(CGRect)rect atHorizontalPosition:(NSUInteger)horizontalPosition color:(SKColor *)color;
 
 @end

@@ -8,6 +8,11 @@
 
 #import <SpriteKit/SpriteKit.h>
 
-@interface GameScene : SKScene
+#import "DDGameManager.h"
+
+/**
+ *  GameScene will be the class that defines the game's menu and replay system. Most of the internal mechanics will be handled in DDGameManager.
+ */
+@interface GameScene : SKScene <SKPhysicsContactDelegate, DDGameManagerDelegate>
 
 @end
